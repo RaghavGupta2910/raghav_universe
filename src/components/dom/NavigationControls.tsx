@@ -1,7 +1,6 @@
 'use client';
 
 import { useUniverseStore } from '@/hooks/useUniverseStore';
-import { Orbit, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export function NavigationControls() {
   const isOrbitingEnabled = useUniverseStore((s) => s.isOrbitingEnabled);
@@ -13,41 +12,37 @@ export function NavigationControls() {
   if (!isEntryComplete) return null;
 
   return (
-    <div className="pointer-events-auto fixed bottom-8 left-8 z-30 hidden lg:flex items-center gap-2">
-      {/* Orbit Pause / Resume */}
+    <div className="pointer-events-auto fixed bottom-8 left-8 z-30 hidden lg:flex items-center gap-3 font-body text-xs">
       <button
         onClick={toggleOrbiting}
-        className={`flex items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[11px] backdrop-blur-md transition-all duration-300 ${
+        className={`flex items-center gap-2 rounded-full border px-3.5 py-1.5 backdrop-blur-sm transition-colors ${
           isOrbitingEnabled
-            ? 'border-slate-800/80 bg-slate-950/70 text-slate-300 hover:border-slate-700'
-            : 'border-amber-800/60 bg-amber-950/40 text-amber-300'
+            ? 'border-[#8F98A8]/20 bg-[#080B12]/70 text-[#8F98A8] hover:text-[#E8E1D5] hover:border-[#B79A5B]/40'
+            : 'border-[#B79A5B]/40 bg-[#10151D]/90 text-[#B79A5B]'
         }`}
         title={isOrbitingEnabled ? 'Pause Planetary Orbits [SPACE]' : 'Resume Orbits [SPACE]'}
       >
-        <Orbit
-          className={`h-3.5 w-3.5 ${isOrbitingEnabled ? 'animate-spin' : ''}`}
-          style={{ animationDuration: '16s' }}
-        />
-        <span className="text-[10px] tracking-widest uppercase">
-          {isOrbitingEnabled ? 'ORBITS: ACTIVE' : 'ORBITS: PAUSED'}
+        <span className={`h-1.5 w-1.5 rounded-full ${isOrbitingEnabled ? 'bg-[#4E8F89]' : 'bg-[#B79A5B]'}`} />
+        <span className="font-mono text-[11px] tracking-wider">
+          {isOrbitingEnabled ? 'ORBITS ACTIVE' : 'ORBITS PAUSED'}
         </span>
       </button>
 
-      {/* Orbit Traversal Shortcuts */}
-      <div className="flex items-center rounded-full border border-slate-800/80 bg-slate-950/70 backdrop-blur-md p-1">
+      <div className="flex items-center rounded-full border border-[#8F98A8]/20 bg-[#080B12]/70 backdrop-blur-sm px-1 py-0.5">
         <button
           onClick={navigatePrev}
-          className="p-1.5 text-slate-400 hover:text-slate-100 hover:bg-slate-900 rounded-full transition-colors"
+          className="px-2 py-1 text-[#8F98A8] hover:text-[#E8E1D5] transition-colors font-mono text-[11px]"
           title="Previous Sector [Left Arrow]"
         >
-          <ChevronLeft className="h-3.5 w-3.5" />
+          PREV
         </button>
+        <span className="text-[#8F98A8]/30">|</span>
         <button
           onClick={navigateNext}
-          className="p-1.5 text-slate-400 hover:text-slate-100 hover:bg-slate-900 rounded-full transition-colors"
+          className="px-2 py-1 text-[#8F98A8] hover:text-[#E8E1D5] transition-colors font-mono text-[11px]"
           title="Next Sector [Right Arrow]"
         >
-          <ChevronRight className="h-3.5 w-3.5" />
+          NEXT
         </button>
       </div>
     </div>

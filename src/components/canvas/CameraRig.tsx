@@ -34,13 +34,7 @@ export function CameraRig() {
   const tempPlanetPos = useRef(new THREE.Vector3());
 
   useEffect(() => {
-    console.log('[CAMERA] mounted');
-  }, []);
-
-  // Global Keyboard Navigation
-  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't intercept when typing in an input
       if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
 
       if (e.key === 'ArrowRight') {
@@ -63,9 +57,7 @@ export function CameraRig() {
   }, [navigateNext, navigatePrev, resetToUniverse, toggleOrbiting]);
 
   useFrame(() => {
-    // 1. MULTIVERSE ENTRANCE SEQUENCE (Reacts purely to DOM-driven entryProgress)
     if (!isEntryComplete) {
-      // Non-linear cinematic camera trajectory (Cubic Ease In-Out)
       const easeProgress = prefersReducedMotion
         ? entryProgress
         : entryProgress < 0.5
@@ -85,13 +77,11 @@ export function CameraRig() {
       return;
     }
 
-    // 2. INTERACTIVE EXPLORATION & AUTHORITATIVE PLANET CAMERA TARGETING
     const lerpSpeed = prefersReducedMotion ? 0.3 : 0.052;
 
     if (activeWorld) {
       const planet = PLANETS_CONFIG.find((p) => p.id === activeWorld);
       if (planet) {
-        // Query the live world-space coordinates of the actual planet mesh
         const hasLivePos = getCelestialWorldPosition(activeWorld, tempPlanetPos.current);
         const planetPos = hasLivePos ? tempPlanetPos.current : new THREE.Vector3(...planet.position);
 
@@ -99,28 +89,24 @@ export function CameraRig() {
         const inspectParallaxY = pointer.y * 0.15;
         const comp = planet.composition;
 
-        // Camera position is strictly derived relative to the live planet
         targetPosition.current.set(
           planetPos.x + comp.cameraPositionOffset[0] + inspectParallaxX,
           planetPos.y + comp.cameraPositionOffset[1] + inspectParallaxY,
           planetPos.z + comp.cameraPositionOffset[2]
         );
 
-        // Camera lookAt is strictly targeted at the live planet
         targetLookAt.current.set(
           planetPos.x + comp.lookAtOffset[0],
           planetPos.y + comp.lookAtOffset[1],
           planetPos.z + comp.lookAtOffset[2]
         );
 
-        // Check if camera has reached close proximity to frame the planet
         const dist = camera.position.distanceTo(targetPosition.current);
         if (dist < 0.45) {
           setWorldTransitionStage('arrived');
         }
       }
     } else {
-      // Global Universe Overview with gentle pointer parallax
       const parallaxX = pointer.x * 3.5;
       const parallaxY = pointer.y * 2.0;
 

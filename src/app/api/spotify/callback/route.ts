@@ -15,23 +15,13 @@ export async function GET(request: NextRequest) {
   const storedState = request.cookies.get('spotify_auth_state')?.value;
   const isStateValid = validateAndConsumeOAuthState(state, storedState);
 
-  console.log('[SPOTIFY DEBUG] CALLBACK:');
-  console.log('callback reached = YES');
-  console.log('code received =', Boolean(code) ? 'YES' : 'NO');
-  console.log('state received =', Boolean(state) ? 'YES' : 'NO');
-  console.log('state validated =', isStateValid ? 'PASS' : 'FAIL');
-
-  // 1. Handle error returned directly from Spotify
   if (error) {
-    console.error('Spotify Authorization error param:', error);
     return NextResponse.redirect(
       new URL(`/?world=music&error=${encodeURIComponent(error)}`, baseUrl)
     );
   }
 
-  // 2. Validate state to prevent CSRF attacks
   if (!isStateValid) {
-    console.warn('Spotify OAuth state mismatch. Validation failed.');
     return NextResponse.redirect(
       new URL('/?world=music&error=state_mismatch', baseUrl)
     );
@@ -44,16 +34,11 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // 3. Exchange authorization code for tokens
     const tokenData = await exchangeSpotifyCode(code);
 
     const now = Date.now();
     const expiresAt = now + tokenData.expires_in * 1000;
     const refreshToken = tokenData.refresh_token || '';
-
-    // 4. Save session persistently to local server session file
-    console.log('[SPOTIFY DEBUG] SESSION:');
-    console.log('session creation attempted = YES');
 
     if (refreshToken) {
       saveServerSession({
@@ -62,21 +47,12 @@ export async function GET(request: NextRequest) {
         expiresAt,
         scope: tokenData.scope,
       });
-      console.log('session created = YES');
-      console.log('cookie/session identifier created = YES');
-    } else {
-      console.log('session creation succeeded = NO (missing refresh token)');
     }
 
-    // 5. Construct redirect response to the MUSIC world on canonical base origin
     const redirectUrl = new URL('/?world=music&spotify=connected', baseUrl);
-    console.log('[SPOTIFY DEBUG] REDIRECT:');
-    console.log(`callback redirect destination = ${redirectUrl.toString()}`);
-
     const response = NextResponse.redirect(redirectUrl);
     const isHttps = baseUrl.startsWith('https') || process.env.NODE_ENV === 'production';
 
-    // 6. Set HTTP-Only cookies with broad Path and Lax SameSite
     response.cookies.set('spotify_access_token', tokenData.access_token, {
       httpOnly: true,
       secure: isHttps,
@@ -90,7 +66,7 @@ export async function GET(request: NextRequest) {
         httpOnly: true,
         secure: isHttps,
         sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 365, // 1 year
+        maxAge: 60 * 60 * 24 * 365,
         path: '/',
       });
     }
@@ -103,13 +79,11 @@ export async function GET(request: NextRequest) {
       path: '/',
     });
 
-    // Clear one-time CSRF state cookie
     response.cookies.delete('spotify_auth_state');
 
     return response;
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'token_exchange_failed';
-    console.error('Spotify token exchange exception:', msg);
     return NextResponse.redirect(
       new URL(`/?world=music&error=${encodeURIComponent(msg)}`, baseUrl)
     );

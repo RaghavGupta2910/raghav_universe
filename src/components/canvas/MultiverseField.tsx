@@ -6,7 +6,6 @@ import * as THREE from 'three';
 import { createPRNG } from '@/lib/math';
 import { useUniverseStore } from '@/hooks/useUniverseStore';
 
-// Distant Galaxy Vortex Point Shader
 const GalaxyClusterShader = {
   vertexShader: `
     attribute float aSize;
@@ -49,7 +48,6 @@ export function MultiverseField() {
   const groupRef = useRef<THREE.Group>(null);
   const shaderMatRef = useRef<THREE.ShaderMaterial>(null);
 
-  // Generate 20 distant multiverse galaxy vortexes
   const [positions, colors, sizes, alphas] = useMemo(() => {
     const prng = createPRNG(77712);
     const totalGalaxies = 18;
@@ -62,17 +60,16 @@ export function MultiverseField() {
     const als = new Float32Array(totalPoints);
 
     const galaxyPalettes = [
-      [new THREE.Color('#38bdf8'), new THREE.Color('#818cf8')], // Cyan-Blue
-      [new THREE.Color('#c084fc'), new THREE.Color('#e879f9')], // Violet-Magenta
-      [new THREE.Color('#34d399'), new THREE.Color('#6ee7b7')], // Emerald
-      [new THREE.Color('#fbbf24'), new THREE.Color('#f97316')], // Amber-Gold
-      [new THREE.Color('#f43f5e'), new THREE.Color('#fb7185')], // Crimson-Rose
+      [new THREE.Color('#38bdf8'), new THREE.Color('#818cf8')],
+      [new THREE.Color('#c084fc'), new THREE.Color('#e879f9')],
+      [new THREE.Color('#34d399'), new THREE.Color('#6ee7b7')],
+      [new THREE.Color('#fbbf24'), new THREE.Color('#f97316')],
+      [new THREE.Color('#f43f5e'), new THREE.Color('#fb7185')],
     ];
 
     let pIdx = 0;
 
     for (let g = 0; g < totalGalaxies; g++) {
-      // Distribute galaxy centers on deep spherical perimeter
       const radius = 280 + prng() * 320;
       const theta = 2 * Math.PI * prng();
       const phi = Math.acos(2 * prng() - 1);
@@ -83,7 +80,6 @@ export function MultiverseField() {
 
       const palette = galaxyPalettes[g % galaxyPalettes.length];
 
-      // Spiral arms for each miniature galaxy
       for (let i = 0; i < pointsPerGalaxy; i++) {
         const armAngle = (i / pointsPerGalaxy) * Math.PI * 4;
         const armRadius = Math.pow(prng(), 1.5) * 35.0;

@@ -1,64 +1,83 @@
 @import "tailwindcss";
 
 :root {
-  --background: #02050f;
-  --foreground: #f8fafc;
-  --font-serif: "Playfair Display", Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --font-script: "Caveat", "Brush Script MT", "Segoe Script", cursive, sans-serif;
+  --background: #080B12;
+  --background-secondary: #10151D;
+  --text-ivory: #E8E1D5;
+  --text-muted: #8F98A8;
+  --accent-teal: #4E8F89;
+  --accent-brass: #B79A5B;
+  --accent-plum: #70556F;
+  --accent-burgundy: #8B4F4F;
+  --font-cormorant: "Cormorant Garamond", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-dmsans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-jetbrains: "JetBrains Mono", ui-monospace, Menlo, Monaco, Consolas, monospace;
 }
 
 body {
-  background-color: #02050f;
-  color: #f8fafc;
+  background-color: var(--background);
+  color: var(--text-ivory);
   overflow-x: hidden;
   user-select: none;
   -webkit-font-smoothing: antialiased;
-  font-family: var(--font-sans);
+  font-family: var(--font-dmsans), -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.font-serif {
-  font-family: var(--font-serif);
+.font-display {
+  font-family: var(--font-cormorant), Georgia, serif;
 }
 
-.font-script {
-  font-family: var(--font-script);
+.font-body {
+  font-family: var(--font-dmsans), -apple-system, sans-serif;
 }
 
-/* Custom Scrollbar for Codex Manuscript */
+.font-mono {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+}
+
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(2, 6, 23, 0.6);
+  background: rgba(8, 11, 18, 0.9);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(56, 189, 248, 0.25);
-  border-radius: 9999px;
+  background: rgba(183, 154, 91, 0.25);
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(56, 189, 248, 0.45);
+  background: rgba(183, 154, 91, 0.45);
 }
 
-/* Subtle Astronomical Manuscript Line Grid */
-.codex-grid-bg {
-  background-image: 
-    linear-gradient(to right, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
+.observatory-rule {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(183, 154, 91, 0.4) 0%, rgba(183, 154, 91, 0.05) 100%);
 }
 
-/* Hand-drawn scribble highlight effect */
-.hand-annotation {
-  font-style: italic;
-  letter-spacing: 0.02em;
-  color: #7dd3fc;
-  opacity: 0.9;
+.observatory-rule-center {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(183, 154, 91, 0.35) 50%, transparent 100%);
+}
+
+.folio-border {
+  border-color: rgba(143, 152, 168, 0.12);
+}
+
+.folio-border-brass {
+  border-color: rgba(183, 154, 91, 0.22);
+}
+
+.folio-card {
+  background-color: rgba(16, 21, 29, 0.7);
+  border: 1px solid rgba(143, 152, 168, 0.12);
+}
+
+.folio-card:hover {
+  border-color: rgba(183, 154, 91, 0.35);
 }
 
 @keyframes slideInRight {
@@ -74,19 +93,4 @@ body {
 
 .animate-in.slide-in-from-right {
   animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.6;
-    filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.4));
-  }
-  50% {
-    opacity: 1;
-    filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.8));
-  }
-}
-
-.animate-pulse-glow {
-  animation: pulseGlow 3s ease-in-out infinite;
 }

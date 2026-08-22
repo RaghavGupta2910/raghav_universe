@@ -8,7 +8,6 @@ import { createAtmosphereMaterial } from './AtmosphereShader';
 import { generateOrbitalRingPoints } from '@/lib/math';
 import { registerCelestialObject, unregisterCelestialObject } from '@/lib/spatial/celestialRegistry';
 
-// Solar Core Radiant Convection Shader
 const SolarCoreShader = {
   vertexShader: `
     varying vec3 vNormal;
@@ -147,7 +146,6 @@ export function CentralStar() {
 
   return (
     <group ref={groupRef} position={[0, 0, 0]}>
-      {/* Radiant Solar Convective Core */}
       <mesh
         ref={coreRef}
         onClick={(e) => {
@@ -175,15 +173,12 @@ export function CentralStar() {
         />
       </mesh>
 
-      {/* Atmospheric Corona Shading */}
       <mesh ref={coronaRef} material={atmosphereMaterial}>
         <sphereGeometry args={[2.85, 48, 48]} />
       </mesh>
 
-      {/* Central Omnidirectional Light */}
       <pointLight color="#fef08a" intensity={3.5} distance={80} decay={1.2} />
 
-      {/* Inner Gravitational Energy Rings */}
       <group ref={ringRef1}>
         <primitive object={ringLine1} />
       </group>

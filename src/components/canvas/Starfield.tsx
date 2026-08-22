@@ -7,7 +7,6 @@ import { useUniverseStore } from '@/hooks/useUniverseStore';
 import { useDeviceCapability } from '@/hooks/useDeviceCapability';
 import { createPRNG, lerp } from '@/lib/math';
 
-// Custom Star Shader with circular soft alpha falloff and twinkling
 const StarShaderMaterial = {
   vertexShader: `
     attribute float aSize;
@@ -51,7 +50,6 @@ const StarShaderMaterial = {
   `,
 };
 
-// Soft Cosmic Nebular Dust Shader with wide Gaussian falloff
 const NebulaShaderMaterial = {
   vertexShader: `
     attribute float aSize;
@@ -101,7 +99,6 @@ export function Starfield() {
   const fgStarMatRef = useRef<THREE.ShaderMaterial>(null);
   const dustMatRef = useRef<THREE.ShaderMaterial>(null);
 
-  // Background & Midground Stars
   const [starPositions, starColors, starSizes, starBrightness, twinkleSpeed, twinklePhase] =
     useMemo(() => {
       const prng = createPRNG(421337);
@@ -156,7 +153,6 @@ export function Starfield() {
       return [positions, colors, sizes, brightness, tSpeed, tPhase];
     }, [starCount]);
 
-  // Foreground Sparse Parallax Stars
   const [fgPositions, fgColors, fgSizes, fgBrightness, fgSpeed, fgPhase] = useMemo(() => {
     const prng = createPRNG(88123);
     const count = Math.floor(starCount * 0.05);
@@ -190,7 +186,6 @@ export function Starfield() {
     return [positions, colors, sizes, brightness, tSpeed, tPhase];
   }, [starCount]);
 
-  // Soft Cosmic Nebular Dust Haze
   const [dustPositions, dustColors, dustSizes, dustAlphas] = useMemo(() => {
     const prng = createPRNG(55577);
     const dustCount = Math.floor(starCount * 0.08);
@@ -264,7 +259,6 @@ export function Starfield() {
 
   return (
     <group>
-      {/* Background Starfield */}
       <points ref={starsRef}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[starPositions, 3]} />
@@ -288,7 +282,6 @@ export function Starfield() {
         />
       </points>
 
-      {/* Foreground Sparse Parallax Stars */}
       <points ref={foregroundRef}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[fgPositions, 3]} />
@@ -312,7 +305,6 @@ export function Starfield() {
         />
       </points>
 
-      {/* Ambient Cosmic Haze */}
       <points ref={dustRef}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[dustPositions, 3]} />

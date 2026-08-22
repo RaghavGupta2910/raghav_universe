@@ -29,7 +29,6 @@ export function PlanetMesh({ planet }: PlanetMeshProps) {
   const currentAngleRef = useRef(planet.initialAngle);
   const hoveredLerp = useRef(0);
 
-  // Register live world object in spatial registry
   useEffect(() => {
     if (groupRef.current) {
       registerCelestialObject(planet.id, groupRef.current);
@@ -39,13 +38,11 @@ export function PlanetMesh({ planet }: PlanetMeshProps) {
     };
   }, [planet.id]);
 
-  // Outer Atmospheric Scattering Halo
   const atmosphereMaterial = useMemo(
     () => createAtmosphereMaterial(planet.atmosphereColor, 0.75, 2.4, 0.65),
     [planet.atmosphereColor]
   );
 
-  // Planetary rings for BUILD and CREATE
   const ringLineObject = useMemo(() => {
     if (planet.id === 'build' || planet.id === 'create') {
       const points = generateOrbitalRingPoints(planet.size * 1.75, 0.35, 96);
@@ -74,7 +71,6 @@ export function PlanetMesh({ planet }: PlanetMeshProps) {
       ? 2
       : 3;
 
-  // Memoized Uniforms
   const codeUniforms = useMemo(
     () => ({
       uTime: { value: 0 },
@@ -101,7 +97,6 @@ export function PlanetMesh({ planet }: PlanetMeshProps) {
   useFrame(({ clock }, delta) => {
     const time = clock.getElapsedTime();
 
-    // Orbital revolution (pauses smoothly when inspected)
     if (isOrbitingEnabled && !isSelected) {
       currentAngleRef.current += delta * (planet.orbitalSpeed * 0.08);
     }
@@ -116,7 +111,6 @@ export function PlanetMesh({ planet }: PlanetMeshProps) {
       groupRef.current.position.set(x, y, z);
     }
 
-    // Update Shader Uniforms through meshRef
     hoveredLerp.current = lerp(
       hoveredLerp.current,
       isHovered || isSelected ? 1.0 : 0.0,
@@ -133,7 +127,6 @@ export function PlanetMesh({ planet }: PlanetMeshProps) {
       }
     }
 
-    // Gentle axial rotation
     if (meshRef.current) {
       meshRef.current.rotation.y += delta * 0.15;
     }
@@ -147,7 +140,6 @@ export function PlanetMesh({ planet }: PlanetMeshProps) {
 
   return (
     <group ref={groupRef} position={planet.position}>
-      {/* Primary Planet Sphere with Custom Celestial Shader */}
       <mesh
         ref={meshRef}
         onClick={(e) => {
@@ -181,12 +173,10 @@ export function PlanetMesh({ planet }: PlanetMeshProps) {
         )}
       </mesh>
 
-      {/* Atmospheric Scattering Shell */}
       <mesh ref={atmosphereRef} material={atmosphereMaterial} scale={1.24}>
         <sphereGeometry args={[planet.size, 48, 48]} />
       </mesh>
 
-      {/* Planetary Rings */}
       {ringLineObject && (
         <group ref={ringGroupRef}>
           <primitive object={ringLineObject} />

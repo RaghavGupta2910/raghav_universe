@@ -3,7 +3,7 @@ import { CreateWorldData } from '@/types/create';
 export const CREATE_DATA: CreateWorldData = {
   themeStatement: 'Not everything I create has code in it.',
   overview:
-    'Beyond software and mathematics exists a rich spectrum of tactile, acoustic, and kinetic practices. These disciplines ground analytical thinking in physical expression, organic rhythm, and deliberate artistic craftsmanship.',
+    'Beyond software and mathematics exists a rich spectrum of acoustic, tactile, and visual artistic practices. These disciplines ground analytical thinking in organic rhythm, deliberate craftsmanship, and creative experimentation.',
   categories: {
     music: [
       {
@@ -79,44 +79,6 @@ export const CREATE_DATA: CreateWorldData = {
           'Visual hierarchy is visual logic: clarity of form directs human attention.',
         visualMetaphor: 'Minimalist editorial composition in deep contrast',
         studioNotes: ['Typographic Rhythm', 'Grid Alignment', 'Asymmetry'],
-      },
-    ],
-    movement: [
-      {
-        id: 'dance',
-        category: 'movement',
-        name: 'Structured Movement & Dance',
-        medium: 'Kinetic Rhythm & Spatial Phrasing',
-        description:
-          'Embodied rhythm, dynamic tempo changes, and fluid spatial coordination.',
-        creativePhilosophy:
-          'Non-verbal physical expression translating rhythmic pulse into movement.',
-        visualMetaphor: 'Kinetic vector trajectories in physical space',
-        studioNotes: ['Spatial Kinesthetics', 'Rhythmic Precision', 'Fluid Transitions'],
-      },
-      {
-        id: 'basketball',
-        category: 'movement',
-        name: 'Basketball & Court Geometry',
-        medium: 'Explosive Kinetic Agility & Spatial Playmaking',
-        description:
-          'Split-second decision making, deceleration, court vision, and hand-eye coordination under pressure.',
-        creativePhilosophy:
-          'Rapid spatial geometry calculation and instinct under physical fatigue.',
-        visualMetaphor: 'The arc of the basketball cutting through air',
-        studioNotes: ['Spatial Awareness', 'Explosive Deceleration', 'High-Heart-Rate Focus'],
-      },
-      {
-        id: 'gymnastics',
-        category: 'movement',
-        name: 'Gymnastics & Body Control',
-        medium: 'Bodyweight Calisthenics & Aerial Equilibrium',
-        description:
-          'Full-body isometric tension, balance, and spatial control against gravity.',
-        creativePhilosophy:
-          'Mastering one\'s own body as a mechanical kinetic system.',
-        visualMetaphor: 'Total equilibrium held motionless on a single axis',
-        studioNotes: ['Body Tension', 'Center of Gravity', 'Kinetic Balance'],
       },
     ],
   },

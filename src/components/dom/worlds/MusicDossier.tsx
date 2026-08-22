@@ -6,23 +6,7 @@ import { useRouter } from 'next/navigation';
 import { MusicWorldData } from '@/types/music';
 import { useUniverseStore } from '@/hooks/useUniverseStore';
 import { FEATURED_PLAYLIST_IDS } from '@/lib/spotify/featured';
-import {
-  ArrowRight,
-  ExternalLink,
-  Music2,
-  Radio,
-  User,
-  AlertCircle,
-  RefreshCw,
-  LogOut,
-  Disc3,
-  Clock,
-  Sparkles,
-} from 'lucide-react';
 
-/**
- * Format ISO timestamp to natural relative time (e.g. "2h ago", "Today")
- */
 function formatRelativeTime(isoString: string): string {
   try {
     const date = new Date(isoString);
@@ -90,7 +74,6 @@ export function MusicDossier() {
     }
   };
 
-  // Partition playlists into Featured vs Other Collections
   const { featuredPlaylists, otherPlaylists } = useMemo(() => {
     if (!data?.playlists || data.playlists.length === 0) {
       return { featuredPlaylists: [], otherPlaylists: [] };
@@ -111,7 +94,6 @@ export function MusicDossier() {
       };
     }
 
-    // Default: Highlight top 3 playlists
     return {
       featuredPlaylists: all.slice(0, 3),
       otherPlaylists: all.slice(3),
@@ -119,34 +101,30 @@ export function MusicDossier() {
   }, [data?.playlists]);
 
   return (
-    <div className="space-y-24 font-sans relative pb-28 select-text">
-      {/* ========================================================================= */}
-      {/* 01. EDITORIAL HERO SECTION                                                */}
-      {/* ========================================================================= */}
-      <section className="space-y-6 pt-2 relative">
-        <div className="flex items-center justify-between font-mono text-[10px] text-purple-400/80 tracking-widest uppercase border-b border-purple-900/30 pb-3">
+    <div className="space-y-16 font-body text-[#E8E1D5] relative pb-20 select-text">
+      <section className="space-y-6 pt-2">
+        <div className="flex items-center justify-between font-mono text-[11px] text-[#8F98A8] border-b border-[#8F98A8]/15 pb-3">
           <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse" />
-            <span>SECTOR 03 {'//'} MUSIC</span>
+            <span className="h-1.5 w-1.5 rounded-full bg-[#70556F]" />
+            <span>SECTOR 03 &middot; MUSIC ARCHIVE</span>
           </div>
-          <span className="text-slate-500">COORDINATES: 27.0 AU</span>
+          <span>27.0 AU</span>
         </div>
 
         <div className="space-y-3 pt-2">
-          <h1 className="font-serif text-6xl sm:text-7xl lg:text-8xl font-extrabold tracking-tight text-slate-100 leading-none">
-            MUSIC
+          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-normal text-[#E8E1D5] tracking-tight leading-none">
+            Music & Sound
           </h1>
-          <p className="font-serif text-lg sm:text-xl font-light text-slate-300 italic max-w-xl leading-relaxed">
+          <p className="font-display text-lg sm:text-xl text-[#B79A5B] italic max-w-xl leading-relaxed">
             &ldquo;A little window into what I listen to.&rdquo;
           </p>
         </div>
 
-        {/* Profile & Connection Header Badge */}
         {data?.isConnected && data.profile && (
-          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-purple-950/40 pt-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#8F98A8]/15 pt-4">
             <div className="flex items-center gap-3">
               {data.profile.avatarUrl ? (
-                <div className="relative h-10 w-10 rounded-full overflow-hidden border border-emerald-500/40">
+                <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#B79A5B]/40">
                   <Image
                     src={data.profile.avatarUrl}
                     alt={data.profile.displayName}
@@ -156,216 +134,169 @@ export function MusicDossier() {
                   />
                 </div>
               ) : (
-                <div className="h-10 w-10 rounded-full border border-emerald-500/40 bg-emerald-950/30 flex items-center justify-center">
-                  <User className="h-5 w-5 text-emerald-400" />
+                <div className="h-10 w-10 rounded-full border border-[#8F98A8]/20 bg-[#10151D] flex items-center justify-center font-display text-sm text-[#E8E1D5]">
+                  {data.profile.displayName.charAt(0)}
                 </div>
               )}
 
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="font-sans text-sm font-semibold text-slate-100">
+                  <span className="text-sm font-medium text-[#E8E1D5]">
                     {data.profile.displayName}
                   </span>
-                  <span className="inline-flex items-center gap-1 font-mono text-[10px] text-emerald-400">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    Connected to Spotify
+                  <span className="font-mono text-[10px] text-[#4E8F89]">
+                    &middot; Connected
                   </span>
                 </div>
                 <a
                   href={data.profile.profileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 font-mono text-[11px] text-slate-400 hover:text-emerald-300 transition-colors"
+                  className="font-mono text-[11px] text-[#8F98A8] hover:text-[#B79A5B] transition-colors block"
                 >
-                  <span>Open Spotify Profile</span>
-                  <ExternalLink className="h-2.5 w-2.5" />
+                  Spotify Profile ↗
                 </a>
               </div>
             </div>
 
             <button
               onClick={handleDisconnect}
-              className="inline-flex items-center gap-1.5 rounded-full border border-slate-800 bg-slate-900/40 px-3 py-1 font-mono text-[10px] text-slate-400 hover:text-rose-300 hover:border-rose-900/60 transition-all"
-              title="Disconnect Spotify Session"
+              className="rounded-full border border-[#8F98A8]/20 bg-[#10151D] px-3.5 py-1 font-mono text-[11px] text-[#8F98A8] hover:text-[#8B4F4F] transition-colors"
             >
-              <LogOut className="h-3 w-3" />
-              <span>Disconnect</span>
+              Disconnect
             </button>
           </div>
         )}
       </section>
 
-      {/* Loading State */}
       {isLoading && (
-        <div className="p-12 border border-slate-800/60 rounded-xl bg-slate-950/40 text-center font-mono text-xs text-slate-400 flex items-center justify-center gap-3 animate-pulse">
-          <RefreshCw className="h-4 w-4 animate-spin text-purple-400" />
-          <span>Opening Raghav&apos;s musical archive...</span>
+        <div className="p-10 rounded-xl border border-[#8F98A8]/15 bg-[#10151D]/60 text-center font-mono text-xs text-[#8F98A8] animate-pulse">
+          Opening musical folio...
         </div>
       )}
 
-      {/* Error State */}
       {!isLoading && error && (
-        <div className="border border-rose-900/40 bg-rose-950/20 p-6 rounded-xl space-y-2 font-mono text-xs">
-          <div className="flex items-center gap-2 text-rose-400 font-bold">
-            <AlertCircle className="h-4 w-4" />
-            <span>MUSIC ARCHIVE TEMPORARILY UNAVAILABLE</span>
-          </div>
-          <p className="text-slate-300 text-[11px] leading-relaxed">
-            Could not retrieve Spotify data ({error}). Please check back shortly.
+        <div className="p-6 rounded-xl border border-[#8B4F4F]/40 bg-[#8B4F4F]/10 space-y-1 font-body text-xs text-[#E8E1D5]">
+          <span className="font-mono text-[#8B4F4F] font-semibold block">MUSIC FOLIO UNAVAILABLE</span>
+          <p className="text-[#8F98A8] text-[11px]">
+            Spotify data could not be retrieved ({error}).
           </p>
         </div>
       )}
 
-      {/* Unauthenticated State */}
       {!isLoading && !error && !data?.isConnected && (
-        <div className="border border-purple-900/30 bg-purple-950/20 p-8 sm:p-10 rounded-2xl space-y-6 max-w-2xl">
-          <div className="flex items-start justify-between">
-            <div className="space-y-2">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-purple-400 block">
-                SPOTIFY CONNECTION
-              </span>
-              <h2 className="font-serif text-3xl font-extrabold text-slate-100">
-                Connect Spotify
-              </h2>
-              <p className="font-serif text-sm font-light text-slate-300 italic leading-relaxed">
-                &ldquo;Listen along with what&apos;s playing in Raghav&apos;s universe.&rdquo;
-              </p>
-            </div>
-            <div className="h-12 w-12 rounded-full border border-purple-500/40 bg-purple-900/30 flex items-center justify-center">
-              <Radio className="h-6 w-6 text-purple-400 animate-pulse" />
-            </div>
+        <div className="p-8 rounded-2xl border border-[#8F98A8]/15 bg-[#10151D]/60 space-y-4 max-w-xl">
+          <div className="space-y-1">
+            <span className="font-mono text-[10px] text-[#B79A5B] uppercase tracking-wider block">
+              Spotify Integration
+            </span>
+            <h2 className="font-display text-3xl font-normal text-[#E8E1D5]">
+              Connect Spotify
+            </h2>
+            <p className="font-display text-sm text-[#8F98A8] italic">
+              &ldquo;Listen along with what is playing in Raghav&apos;s universe.&rdquo;
+            </p>
           </div>
 
-          <div className="border-t border-purple-900/30 pt-4">
+          <div className="pt-2">
             <a
               href="/api/spotify/login"
-              className="inline-flex items-center gap-2.5 rounded-full border border-emerald-500/60 bg-emerald-950/60 px-6 py-2.5 font-mono text-xs text-emerald-300 hover:bg-emerald-900/50 hover:text-emerald-100 hover:border-emerald-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)]"
+              className="inline-block px-5 py-2 rounded-full border border-[#4E8F89]/60 bg-[#10151D] font-mono text-xs text-[#E8E1D5] hover:border-[#4E8F89] transition-colors"
             >
-              <Music2 className="h-4 w-4 text-emerald-400" />
-              <span className="font-semibold uppercase tracking-wider">Connect Spotify</span>
-              <ExternalLink className="h-3.5 w-3.5" />
+              Connect Spotify ↗
             </a>
           </div>
         </div>
       )}
 
-      {/* Authenticated Presentation */}
       {!isLoading && !error && data?.isConnected && (
         <>
-          {/* ===================================================================== */}
-          {/* 02. MY PLAYLISTS (PRIMARY CENTERPIECE)                                */}
-          {/* ===================================================================== */}
           {data.playlists && data.playlists.length > 0 && (
-            <section className="space-y-8 border-t border-purple-900/30 pt-10">
+            <section className="space-y-8 border-t border-[#8F98A8]/15 pt-10">
               <div className="space-y-1">
-                <div className="flex items-center gap-2 font-mono text-[10px] text-purple-400 uppercase tracking-widest">
-                  <Sparkles className="h-3 w-3" />
-                  <span>CURATED COLLECTIONS</span>
-                </div>
-                <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-slate-100 tracking-tight">
+                <span className="font-mono text-[11px] text-[#B79A5B] tracking-wider uppercase block">
+                  Curated Collections
+                </span>
+                <h2 className="font-display text-3xl sm:text-4xl font-normal text-[#E8E1D5]">
                   My Playlists
                 </h2>
               </div>
 
-              {/* Featured Large Playlists */}
               {featuredPlaylists.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {featuredPlaylists.map((pl) => (
                     <a
                       key={pl.id}
                       href={pl.spotifyUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-purple-900/40 bg-gradient-to-b from-slate-900/80 to-slate-950/90 p-5 backdrop-blur-md hover:border-emerald-500/60 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] transition-all duration-300"
+                      className="group flex flex-col justify-between rounded-xl border border-[#8F98A8]/15 bg-[#10151D]/60 p-4 hover:border-[#B79A5B]/40 hover:bg-[#10151D] transition-colors"
                     >
-                      <div className="space-y-4">
-                        {/* Playlist Cover Image */}
-                        <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-slate-900 border border-slate-800">
-                          {pl.imageUrl ? (
+                      <div className="space-y-3">
+                        <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-[#080B12] border border-[#8F98A8]/10">
+                          {pl.imageUrl && (
                             <Image
                               src={pl.imageUrl}
                               alt={pl.name}
                               fill
                               unoptimized
-                              className="object-cover transition-transform duration-500 group-hover:scale-105"
+                              className="object-cover group-hover:scale-105 transition-transform duration-500"
                             />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-purple-950/30">
-                              <Disc3 className="h-16 w-16 text-purple-400/40" />
-                            </div>
                           )}
-
-                          {/* Hover Spotify Overlay Badge */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-3 py-1 font-mono text-[10px] font-bold text-slate-950 shadow-lg">
-                              <Music2 className="h-3 w-3" />
-                              <span>PLAY ON SPOTIFY</span>
-                            </span>
-                          </div>
                         </div>
 
-                        {/* Title & Description */}
-                        <div className="space-y-1.5">
-                          <h3 className="font-serif text-xl font-bold text-slate-100 group-hover:text-emerald-300 transition-colors line-clamp-1">
+                        <div className="space-y-1">
+                          <h3 className="font-display text-xl font-medium text-[#E8E1D5] group-hover:text-[#B79A5B] transition-colors line-clamp-1">
                             {pl.name}
                           </h3>
                           {pl.description && (
-                            <p className="font-sans text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                            <p className="text-xs text-[#8F98A8] line-clamp-2 leading-relaxed">
                               {pl.description}
                             </p>
                           )}
                         </div>
                       </div>
 
-                      {/* Footer Metadata */}
-                      <div className="flex items-center justify-between border-t border-slate-800/60 pt-3 mt-4 font-mono text-[10px] text-slate-400">
-                        <span>{pl.trackCount} {pl.trackCount === 1 ? 'track' : 'tracks'}</span>
-                        <span className="inline-flex items-center gap-1 text-emerald-400/80 group-hover:text-emerald-300">
-                          <span>Open</span>
-                          <ExternalLink className="h-2.5 w-2.5" />
-                        </span>
+                      <div className="flex items-center justify-between border-t border-[#8F98A8]/10 pt-3 mt-3 font-mono text-[10px] text-[#8F98A8]">
+                        <span>{pl.trackCount} tracks</span>
+                        <span className="text-[#E8E1D5] group-hover:text-[#B79A5B]">Play ↗</span>
                       </div>
                     </a>
                   ))}
                 </div>
               )}
 
-              {/* Other Playlist Cards */}
               {otherPlaylists.length > 0 && (
                 <div className="space-y-3 pt-4">
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 block">
-                    MORE ARCHIVES
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-[#8F98A8] block">
+                    More Archives
                   </span>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                     {otherPlaylists.map((pl) => (
                       <a
                         key={pl.id}
                         href={pl.spotifyUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex flex-col justify-between rounded-xl border border-slate-800/60 bg-slate-950/60 p-3 hover:border-purple-500/50 hover:bg-slate-900/60 transition-all"
+                        className="group flex flex-col justify-between rounded-lg border border-[#8F98A8]/15 bg-[#10151D]/40 p-3 hover:border-[#B79A5B]/30 hover:bg-[#10151D]/70 transition-colors"
                       >
-                        <div className="space-y-2.5">
-                          <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-slate-900">
-                            {pl.imageUrl ? (
+                        <div className="space-y-2">
+                          <div className="relative aspect-square w-full overflow-hidden rounded bg-[#080B12]">
+                            {pl.imageUrl && (
                               <Image
                                 src={pl.imageUrl}
                                 alt={pl.name}
                                 fill
                                 unoptimized
-                                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                className="object-cover"
                               />
-                            ) : (
-                              <div className="flex h-full w-full items-center justify-center">
-                                <Disc3 className="h-8 w-8 text-slate-700" />
-                              </div>
                             )}
                           </div>
                           <div className="space-y-0.5">
-                            <h4 className="font-sans text-xs font-semibold text-slate-200 group-hover:text-purple-300 transition-colors line-clamp-1">
+                            <h4 className="text-xs font-medium text-[#E8E1D5] group-hover:text-[#B79A5B] transition-colors line-clamp-1">
                               {pl.name}
                             </h4>
-                            <span className="font-mono text-[10px] text-slate-500 block">
+                            <span className="font-mono text-[9px] text-[#8F98A8] block">
                               {pl.trackCount} tracks
                             </span>
                           </div>
@@ -378,52 +309,45 @@ export function MusicDossier() {
             </section>
           )}
 
-          {/* ===================================================================== */}
-          {/* 03. ARTISTS I'VE BEEN LISTENING TO                                    */}
-          {/* ===================================================================== */}
           {data.topArtists && data.topArtists.length > 0 && (
-            <section className="space-y-6 border-t border-purple-900/30 pt-10">
+            <section className="space-y-6 border-t border-[#8F98A8]/15 pt-10">
               <div className="space-y-1">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-cyan-400 block">
-                  HEAVY ROTATION
+                <span className="font-mono text-[11px] text-[#4E8F89] tracking-wider uppercase block">
+                  Heavy Rotation
                 </span>
-                <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-slate-100 tracking-tight">
+                <h2 className="font-display text-3xl sm:text-4xl font-normal text-[#E8E1D5]">
                   Artists I&apos;ve Been Listening To
                 </h2>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pt-2">
                 {data.topArtists.map((artist) => (
                   <a
                     key={artist.id}
                     href={artist.spotifyUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex flex-col items-center text-center space-y-3 rounded-xl p-3 hover:bg-slate-900/40 border border-transparent hover:border-slate-800 transition-all"
+                    className="group flex flex-col items-center text-center space-y-2.5 p-3 rounded-xl hover:bg-[#10151D]/60 transition-colors"
                   >
-                    <div className="relative h-24 w-24 sm:h-28 sm:w-28 rounded-full overflow-hidden border border-cyan-500/30 bg-slate-900 shadow-md">
-                      {artist.imageUrl ? (
+                    <div className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-full overflow-hidden border border-[#8F98A8]/20 bg-[#10151D]">
+                      {artist.imageUrl && (
                         <Image
                           src={artist.imageUrl}
                           alt={artist.name}
                           fill
                           unoptimized
-                          className="object-cover group-hover:scale-110 transition-transform duration-500"
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center">
-                          <User className="h-10 w-10 text-cyan-400/40" />
-                        </div>
                       )}
                     </div>
 
-                    <div className="space-y-1 w-full">
-                      <h3 className="font-sans text-xs font-bold text-slate-100 group-hover:text-cyan-300 transition-colors truncate">
+                    <div className="space-y-0.5 w-full">
+                      <h3 className="text-xs font-medium text-[#E8E1D5] group-hover:text-[#B79A5B] transition-colors truncate">
                         {artist.name}
                       </h3>
                       {artist.genres && artist.genres.length > 0 && (
-                        <span className="font-mono text-[9px] text-slate-400 truncate block">
-                          {artist.genres.slice(0, 2).join(' • ')}
+                        <span className="font-mono text-[9px] text-[#8F98A8] truncate block">
+                          {artist.genres.slice(0, 2).join(' &middot; ')}
                         </span>
                       )}
                     </div>
@@ -433,120 +357,102 @@ export function MusicDossier() {
             </section>
           )}
 
-          {/* ===================================================================== */}
-          {/* 04. ON REPEAT (TOP TRACKS)                                            */}
-          {/* ===================================================================== */}
           {data.topTracks && data.topTracks.length > 0 && (
-            <section className="space-y-6 border-t border-purple-900/30 pt-10">
+            <section className="space-y-6 border-t border-[#8F98A8]/15 pt-10">
               <div className="space-y-1">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-amber-400 block">
-                  CURRENT OBSESSIONS
+                <span className="font-mono text-[11px] text-[#B79A5B] tracking-wider uppercase block">
+                  Current Records
                 </span>
-                <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-slate-100 tracking-tight">
+                <h2 className="font-display text-3xl sm:text-4xl font-normal text-[#E8E1D5]">
                   On Repeat
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
                 {data.topTracks.map((track, idx) => (
                   <a
                     key={track.id}
                     href={track.spotifyUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center justify-between gap-3.5 rounded-xl border border-slate-800/60 bg-slate-950/60 p-3 hover:border-amber-500/50 hover:bg-slate-900/70 transition-all"
+                    className="group flex items-center justify-between gap-3 p-3 rounded-lg border border-[#8F98A8]/15 bg-[#10151D]/50 hover:border-[#B79A5B]/30 hover:bg-[#10151D] transition-colors"
                   >
-                    <div className="flex items-center gap-3.5 min-w-0">
-                      <span className="font-mono text-xs text-slate-400 w-5 text-right font-medium">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="font-mono text-xs text-[#8F98A8] w-5 text-right">
                         {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
                       </span>
 
-                      <div className="relative h-12 w-12 flex-shrink-0 rounded-lg overflow-hidden border border-slate-800 bg-slate-900">
-                        {track.albumImageUrl ? (
+                      <div className="relative h-11 w-11 shrink-0 rounded overflow-hidden bg-[#080B12] border border-[#8F98A8]/10">
+                        {track.albumImageUrl && (
                           <Image
                             src={track.albumImageUrl}
                             alt={track.name}
                             fill
                             unoptimized
-                            className="object-cover group-hover:scale-105 transition-transform"
+                            className="object-cover"
                           />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center">
-                            <Music2 className="h-5 w-5 text-slate-700" />
-                          </div>
                         )}
                       </div>
 
                       <div className="min-w-0 space-y-0.5">
-                        <h3 className="font-sans text-xs font-semibold text-slate-100 group-hover:text-amber-300 transition-colors truncate">
+                        <h3 className="text-xs font-medium text-[#E8E1D5] group-hover:text-[#B79A5B] transition-colors truncate">
                           {track.name}
                         </h3>
-                        <p className="font-sans text-[11px] text-slate-400 truncate">
+                        <p className="text-[11px] text-[#8F98A8] truncate">
                           {track.artists.join(', ')}
                         </p>
-                        {track.albumName && (
-                          <p className="font-mono text-[9px] text-slate-400 truncate">
-                            {track.albumName}
-                          </p>
-                        )}
                       </div>
                     </div>
 
-                    <ExternalLink className="h-3 w-3 text-slate-600 group-hover:text-amber-400 transition-colors flex-shrink-0" />
+                    <span className="font-mono text-xs text-[#8F98A8] group-hover:text-[#E8E1D5] shrink-0">
+                      ↗
+                    </span>
                   </a>
                 ))}
               </div>
             </section>
           )}
 
-          {/* ===================================================================== */}
-          {/* 05. RECENTLY IN THE ROTATION                                          */}
-          {/* ===================================================================== */}
           {data.recentlyPlayed && data.recentlyPlayed.length > 0 && (
-            <section className="space-y-6 border-t border-purple-900/30 pt-10">
+            <section className="space-y-6 border-t border-[#8F98A8]/15 pt-10">
               <div className="space-y-1">
-                <div className="flex items-center gap-2 font-mono text-[10px] text-emerald-400 uppercase tracking-widest">
-                  <Clock className="h-3 w-3" />
-                  <span>LISTENING STREAM</span>
-                </div>
-                <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-slate-100 tracking-tight">
+                <span className="font-mono text-[11px] text-[#70556F] tracking-wider uppercase block">
+                  Listening Stream
+                </span>
+                <h2 className="font-display text-3xl sm:text-4xl font-normal text-[#E8E1D5]">
                   Recently in the Rotation
                 </h2>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 pt-2">
                 {data.recentlyPlayed.map((rec) => (
                   <a
                     key={`${rec.id}-${rec.playedAt}`}
                     href={rec.spotifyUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex flex-col space-y-2.5 rounded-xl border border-slate-800/40 bg-slate-950/40 p-3 hover:border-emerald-500/40 hover:bg-slate-900/50 transition-all"
+                    className="group flex flex-col space-y-2 p-2.5 rounded-lg border border-[#8F98A8]/10 bg-[#10151D]/40 hover:border-[#B79A5B]/30 hover:bg-[#10151D] transition-colors"
                   >
-                    <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-slate-900 border border-slate-800/60">
-                      {rec.albumImageUrl ? (
+                    <div className="relative aspect-square w-full overflow-hidden rounded bg-[#080B12]">
+                      {rec.albumImageUrl && (
                         <Image
                           src={rec.albumImageUrl}
                           alt={rec.name}
                           fill
                           unoptimized
-                          className="object-cover group-hover:scale-105 transition-transform"
+                          className="object-cover"
                         />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center">
-                          <Music2 className="h-6 w-6 text-slate-700" />
-                        </div>
                       )}
                     </div>
 
                     <div className="space-y-0.5 min-w-0">
-                      <span className="font-mono text-[9px] text-emerald-400/80 block truncate">
+                      <span className="font-mono text-[9px] text-[#4E8F89] block truncate">
                         {formatRelativeTime(rec.playedAt)}
                       </span>
-                      <h3 className="font-sans text-[11px] font-semibold text-slate-200 group-hover:text-emerald-300 transition-colors truncate">
+                      <h3 className="text-xs font-medium text-[#E8E1D5] group-hover:text-[#B79A5B] transition-colors truncate">
                         {rec.name}
                       </h3>
-                      <p className="font-sans text-[10px] text-slate-400 truncate">
+                      <p className="text-[10px] text-[#8F98A8] truncate">
                         {rec.artists.join(', ')}
                       </p>
                     </div>
@@ -558,41 +464,21 @@ export function MusicDossier() {
         </>
       )}
 
-      {/* ========================================================================= */}
-      {/* 06. CODA & TRAVERSAL                                                      */}
-      {/* ========================================================================= */}
-      <section className="space-y-6 border-t border-purple-900/40 pt-12 relative">
-        <div className="flex items-center justify-between font-mono text-[10px] text-purple-400/80 tracking-widest uppercase">
-          <span>CODA</span>
-          <span>CONTINUOUS HORIZON</span>
-        </div>
+      <section className="space-y-6 border-t border-[#8F98A8]/15 pt-10">
+        <div className="flex flex-wrap items-center gap-4">
+          <button
+            onClick={() => setActiveWorld('create')}
+            className="px-5 py-2 rounded-full border border-[#B79A5B]/40 bg-[#10151D] font-body text-xs text-[#E8E1D5] hover:border-[#B79A5B] hover:text-[#B79A5B] transition-colors"
+          >
+            Traverse to Sector 04: Create &rarr;
+          </button>
 
-        <div className="space-y-4 max-w-xl">
-          <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-slate-100 leading-tight">
-            Sound gives rhythm to thought.
-          </h2>
-
-          <div className="flex flex-wrap items-center gap-4 pt-2">
-            <button
-              onClick={() => setActiveWorld('create')}
-              className="group flex items-center gap-2 rounded-full border border-emerald-500/60 bg-emerald-950/30 px-5 py-2 font-mono text-xs text-emerald-300 backdrop-blur-md hover:bg-emerald-900/40 hover:text-emerald-200 transition-all focus:outline-none"
-            >
-              <span>TRAVERSE TO SECTOR 04: CREATE</span>
-              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-            </button>
-
-            <button
-              onClick={resetToUniverse}
-              className="flex items-center gap-2 rounded-full border border-slate-800 bg-slate-950/60 px-4 py-2 font-mono text-xs text-slate-400 hover:text-slate-100 hover:border-slate-700 transition-all focus:outline-none"
-            >
-              <span>RETURN TO ORBIT OVERVIEW [ESC]</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between font-mono text-[10px] text-slate-600 border-t border-slate-900 pt-4">
-          <span>RAGHAV UNIVERSE // SECTOR 03</span>
-          <span>DELHI, IN // 2026</span>
+          <button
+            onClick={resetToUniverse}
+            className="px-4 py-2 rounded-full border border-[#8F98A8]/20 font-body text-xs text-[#8F98A8] hover:text-[#E8E1D5] transition-colors"
+          >
+            Return to Orbit Overview
+          </button>
         </div>
       </section>
     </div>

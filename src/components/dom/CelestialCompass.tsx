@@ -2,17 +2,6 @@
 
 import { useUniverseStore } from '@/hooks/useUniverseStore';
 import { PLANETS_CONFIG } from '@/config/planets';
-import { WorldId } from '@/types/universe';
-import { Sparkles, Terminal, Layers, Radio, Palette, Flame, type LucideIcon } from 'lucide-react';
-
-const ICONS: Record<WorldId, LucideIcon> = {
-  central: Sparkles,
-  code: Terminal,
-  build: Layers,
-  music: Radio,
-  create: Palette,
-  mindset: Flame,
-};
 
 export function CelestialCompass() {
   const activeWorld = useUniverseStore((s) => s.activeWorld);
@@ -24,50 +13,46 @@ export function CelestialCompass() {
 
   return (
     <nav
-      aria-label="Celestial Navigation"
-      className="pointer-events-auto fixed bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 rounded-full border border-slate-800/80 bg-slate-950/80 p-2 backdrop-blur-2xl shadow-2xl shadow-cyan-950/20 max-w-[92vw] overflow-x-auto animate-in fade-in duration-700"
+      aria-label="Astronomical Index"
+      className="pointer-events-auto fixed bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-6 sm:gap-8 px-6 py-2.5 rounded-full border border-[#8F98A8]/15 bg-[#080B12]/80 backdrop-blur-md shadow-2xl max-w-[95vw] overflow-x-auto"
     >
-      {/* Overview Button */}
       <button
         onClick={() => resetToUniverse()}
-        className={`flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-mono transition-all duration-300 ${
+        className={`relative text-xs sm:text-sm tracking-wide transition-colors py-1 ${
           activeWorld === null
-            ? 'bg-slate-800 text-cyan-300 font-semibold'
-            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
+            ? 'text-[#E8E1D5] font-medium'
+            : 'text-[#8F98A8] hover:text-[#E8E1D5]'
         }`}
-        title="Universe Overview"
       >
-        <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-        <span className="uppercase tracking-widest text-[10px]">UNIVERSE</span>
+        <span className="font-display text-sm sm:text-base">Universe</span>
+        {activeWorld === null && (
+          <span className="absolute -bottom-0.5 left-0 right-0 h-[1.5px] bg-[#B79A5B] rounded-full" />
+        )}
       </button>
 
-      <div className="h-3 w-px bg-slate-800" />
+      <span className="h-3 w-[1px] bg-[#8F98A8]/20" />
 
-      {/* Planet Navigation Links */}
       {PLANETS_CONFIG.map((planet) => {
-        const Icon = ICONS[planet.id] || Sparkles;
         const isActive = activeWorld === planet.id;
+        const displayName =
+          planet.id === 'central'
+            ? 'Raghav'
+            : planet.name.charAt(0).toUpperCase() + planet.name.slice(1).toLowerCase();
 
         return (
           <button
             key={planet.id}
             onClick={() => setActiveWorld(isActive ? null : planet.id)}
-            style={{
-              borderColor: isActive ? planet.glowColor : 'transparent',
-            }}
-            className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-mono transition-all duration-300 border ${
+            className={`relative text-xs sm:text-sm tracking-wide transition-colors py-1 whitespace-nowrap ${
               isActive
-                ? 'bg-slate-900/90 text-slate-100 shadow-md font-semibold'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'
+                ? 'text-[#E8E1D5] font-medium'
+                : 'text-[#8F98A8] hover:text-[#E8E1D5]'
             }`}
           >
-            <Icon
-              className="h-3 w-3 transition-transform duration-300"
-              style={{ color: planet.glowColor }}
-            />
-            <span className="tracking-widest uppercase text-[10px]">
-              {planet.name}
-            </span>
+            <span className="font-display text-sm sm:text-base">{displayName}</span>
+            {isActive && (
+              <span className="absolute -bottom-0.5 left-0 right-0 h-[1.5px] bg-[#B79A5B] rounded-full" />
+            )}
           </button>
         );
       })}

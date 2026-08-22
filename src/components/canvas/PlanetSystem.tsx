@@ -13,7 +13,6 @@ export function PlanetSystem() {
     []
   );
 
-  // Pre-generate orbital path line objects
   const orbitalRingObjects = useMemo(() => {
     return nonCentralPlanets.map((planet) => {
       const points = generateOrbitalRingPoints(
@@ -40,15 +39,12 @@ export function PlanetSystem() {
 
   return (
     <group>
-      {/* Central Star: RAGHAV */}
       <CentralStar />
 
-      {/* Orbital Trajectory Lines */}
       {orbitalRingObjects.map((ring) => (
         <primitive key={`orbit-${ring.id}`} object={ring.line} />
       ))}
 
-      {/* Planetary Bodies */}
       {nonCentralPlanets.map((planet) => (
         <PlanetMesh key={planet.id} planet={planet} />
       ))}

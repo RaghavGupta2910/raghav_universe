@@ -1,10 +1,10 @@
-export type CreativeCategory = 'music' | 'art' | 'movement';
+export type CreativeCategory = 'music' | 'art';
 
 export interface CreativePractice {
   id: string;
   category: CreativeCategory;
   name: string;
-  medium: string; // e.g. "Acoustic Piano & Keyboards", "Paper Filigree", "Court Agility"
+  medium: string;
   description: string;
   creativePhilosophy: string;
   visualMetaphor: string;
@@ -12,11 +12,10 @@ export interface CreativePractice {
 }
 
 export interface CreateWorldData {
-  themeStatement: string; // "Not everything I create has code in it."
+  themeStatement: string;
   overview: string;
   categories: {
     music: CreativePractice[];
     art: CreativePractice[];
-    movement: CreativePractice[];
   };
 }

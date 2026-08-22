@@ -1,12 +1,3 @@
-/**
- * Canonical External Service Identity Handles & Environment Configuration
- *
- * Configured for Raghav Gupta:
- * - Codolio Slug: Raghav2910
- * - GitHub Handle: RaghavGupta2910
- * - LeetCode Handle: raghavgupta2910
- * - Codeforces Handle: raghavgupta291024
- */
 export const HANDLES_CONFIG = {
   codolio: {
     userKey: process.env.CODOLIO_USER_KEY || 'Raghav2910',
@@ -18,7 +9,7 @@ export const HANDLES_CONFIG = {
   },
   leetcode: {
     username: process.env.LEETCODE_USERNAME || 'raghavgupta2910',
-    profileUrl: `https://leetcode.com/${process.env.LEETCODE_USERNAME || 'raghavgupta2910'}`,
+    profileUrl: `https://leetcode.com/u/${process.env.LEETCODE_USERNAME || 'raghavgupta2910'}/`,
   },
   codeforces: {
     handle: process.env.CODEFORCES_HANDLE || 'raghavgupta291024',

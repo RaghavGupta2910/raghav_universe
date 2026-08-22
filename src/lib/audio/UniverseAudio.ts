@@ -1,8 +1,3 @@
-/**
- * Web Audio API Ambient Space Soundscape Generator
- * Produces a soothing, spacious, cinematic background pad with zero external audio assets
- */
-
 class UniverseAudioEngine {
   private ctx: AudioContext | null = null;
   private masterGain: GainNode | null = null;
@@ -22,7 +17,6 @@ class UniverseAudioEngine {
     this.masterGain = this.ctx.createGain();
     this.masterGain.gain.setValueAtTime(0.0001, this.ctx.currentTime);
 
-    // Warm Low-Pass Filter
     this.filter = this.ctx.createBiquadFilter();
     this.filter.type = 'lowpass';
     this.filter.frequency.setValueAtTime(320, this.ctx.currentTime);
@@ -42,7 +36,6 @@ class UniverseAudioEngine {
     if (this.isPlaying) return;
     this.isPlaying = true;
 
-    // Harmonic space pad frequencies (D Minor / Cosmic 432Hz ambient chord: D2, A2, F3, A3, C4)
     const chord = [73.42, 110.0, 174.61, 220.0, 261.63];
 
     this.oscillators = chord.map((freq, idx) => {
@@ -52,7 +45,6 @@ class UniverseAudioEngine {
       osc.type = idx % 2 === 0 ? 'sine' : 'triangle';
       osc.frequency.setValueAtTime(freq, this.ctx!.currentTime);
 
-      // Subtle detune for lush spatial chorus
       osc.detune.setValueAtTime((idx - 2) * 4, this.ctx!.currentTime);
 
       oscGain.gain.setValueAtTime(0.04 / chord.length, this.ctx!.currentTime);
@@ -65,7 +57,6 @@ class UniverseAudioEngine {
 
     this.filter.connect(this.masterGain);
 
-    // Smooth fade in over 2.5 seconds
     this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
     this.masterGain.gain.setValueAtTime(0.0001, this.ctx.currentTime);
     this.masterGain.gain.exponentialRampToValueAtTime(0.18, this.ctx.currentTime + 2.5);
@@ -74,7 +65,6 @@ class UniverseAudioEngine {
   public pause() {
     if (!this.ctx || !this.masterGain || !this.isPlaying) return;
 
-    // Smooth fade out over 1.2 seconds
     this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
     this.masterGain.gain.setValueAtTime(Math.max(this.masterGain.gain.value, 0.0001), this.ctx.currentTime);
     this.masterGain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 1.2);
@@ -85,7 +75,6 @@ class UniverseAudioEngine {
           osc.stop();
           osc.disconnect();
         } catch {
-          // ignore already stopped
         }
       });
       this.oscillators = [];

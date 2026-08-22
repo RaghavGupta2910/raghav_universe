@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect } from 'react';
+import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { CameraRig } from './CameraRig';
 import { Starfield } from './Starfield';
@@ -17,12 +17,8 @@ export function UniverseCanvas() {
   const isEntryComplete = useUniverseStore((s) => s.isEntryComplete);
   const { dpr } = useDeviceCapability();
 
-  useEffect(() => {
-    console.log('[CANVAS] mounted');
-  }, []);
-
   return (
-    <div className="fixed inset-0 z-0 bg-[#02050f] overflow-hidden select-none pointer-events-auto">
+    <div className="fixed inset-0 z-0 bg-[#080B12] overflow-hidden select-none pointer-events-auto">
       <Canvas
         camera={{
           position: MULTIVERSE_START_CAMERA.position,
@@ -36,7 +32,6 @@ export function UniverseCanvas() {
           powerPreference: 'high-performance',
         }}
         onPointerMissed={() => {
-          // If clicked empty cosmic space in interactive mode, return to universe overview
           if (isEntryComplete && activeWorld) {
             resetToUniverse();
           }

@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 import { CodeWorldData } from '@/types/code';
 import { useUniverseStore } from '@/hooks/useUniverseStore';
-import { ArrowRight, Compass, AlertCircle, RefreshCw } from 'lucide-react';
 
 export function CodeDossier() {
-  const { setActiveWorld, resetToUniverse } = useUniverseStore();
+  const setActiveWorld = useUniverseStore((s) => s.setActiveWorld);
+  const resetToUniverse = useUniverseStore((s) => s.resetToUniverse);
+
   const [data, setData] = useState<CodeWorldData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +32,7 @@ export function CodeDossier() {
           throw new Error(json.error || 'Live data feed unavailable');
         }
       } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : 'Unable to connect to live telemetry';
+        const msg = err instanceof Error ? err.message : 'Unable to connect to live archive';
         setError(msg);
         setData(null);
       } finally {
@@ -42,169 +43,127 @@ export function CodeDossier() {
   }, []);
 
   return (
-    <div className="space-y-20 font-sans relative pb-20 select-text">
-      {/* ========================================================================= */}
-      {/* SCENE 01 — HERO EXHIBITION POSTER                                         */}
-      {/* ========================================================================= */}
-      <section className="space-y-8 pt-2 relative">
-        <div className="space-y-3">
-          <div className="flex items-center justify-between font-mono text-[10px] text-cyan-400/80 tracking-widest uppercase border-b border-cyan-900/40 pb-2.5">
-            <div className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
-              <span>EXHIBITION 01 {'//'} SECTOR CODE</span>
-            </div>
-            <span className="text-slate-500">COORDINATES: 11.0 AU {'//'} 28.61N</span>
+    <div className="space-y-16 font-body text-[#E8E1D5] relative pb-20 select-text">
+      <section className="space-y-6 pt-2">
+        <div className="flex items-center justify-between font-mono text-[11px] text-[#8F98A8] border-b border-[#8F98A8]/15 pb-3">
+          <div className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#4E8F89]" />
+            <span>SECTOR 01 &middot; ALGORITHMIC CODEX</span>
           </div>
-
-          <div className="flex items-center justify-between font-mono text-[9px] text-slate-500 uppercase tracking-widest">
-            <span>RAGHAV GUPTA ARCHIVE</span>
-            <span>MATHEMATICS & COMPUTING</span>
-          </div>
+          <span>11.0 AU</span>
         </div>
 
-        <div className="space-y-4 pt-4">
-          <div className="relative">
-            <span className="font-mono text-[10px] text-cyan-400 tracking-[0.3em] uppercase block mb-1">
-              THE CODEX OF
-            </span>
-            <h1 className="font-serif text-6xl sm:text-7xl lg:text-8xl font-extrabold tracking-tight text-slate-100 leading-none">
-              CODE
-            </h1>
-            <div className="h-px w-24 bg-gradient-to-r from-cyan-400 to-transparent mt-3" />
-          </div>
+        <div className="space-y-3 pt-2">
+          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-normal text-[#E8E1D5] tracking-tight leading-none">
+            Code & Rigor
+          </h1>
 
-          <p className="font-serif text-base sm:text-lg font-light text-slate-300 italic max-w-xl leading-relaxed">
-            &ldquo;An authentic live chronicle of algorithmic problem solving, contest telemetry, and discrete mathematics encounters.&rdquo;
+          <p className="font-display text-lg sm:text-xl text-[#4E8F89] italic max-w-xl leading-relaxed">
+            &ldquo;An astronomical chronicle of competitive problem solving, contest records, and discrete mathematical structures.&rdquo;
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 font-mono text-xs text-slate-400 pt-1">
-            <span className="text-cyan-300 font-semibold">Live Telemetry Pipeline</span>
-            <span className="text-slate-700">•</span>
-            <span className="text-amber-300 font-semibold">Verified Source</span>
-            <span className="text-slate-700">•</span>
-            <span className="text-emerald-300 font-semibold">
-              {data?.updatedAt ? `Updated: ${new Date(data.updatedAt).toLocaleDateString()}` : 'Live Telemetry'}
-            </span>
+          <div className="flex flex-wrap items-center gap-4 text-xs text-[#8F98A8] pt-2">
+            <span>Verified Upstream Feeds</span>
+            <span>&middot;</span>
+            <span>LeetCode &middot; Codolio &middot; Codeforces</span>
           </div>
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* SCENE 02 — LIVE DATA STATE OR DATA UNAVAILABLE                            */}
-      {/* ========================================================================= */}
-      <section className="space-y-8 border-t border-cyan-900/30 pt-12 relative">
-        <div className="flex items-center justify-between font-mono text-[10px] text-cyan-400/80 tracking-widest uppercase">
-          <span>02 {'//'} TELEMETRY STATUS</span>
-          <span>LIVE SOURCE</span>
+      {isLoading && (
+        <div className="p-10 rounded-xl border border-[#8F98A8]/15 bg-[#10151D]/60 text-center font-mono text-xs text-[#8F98A8] animate-pulse">
+          Opening algorithmic codex...
         </div>
+      )}
 
-        {isLoading ? (
-          <div className="p-8 border border-slate-800 rounded-lg bg-slate-950/60 text-center font-mono text-xs text-slate-400 flex items-center justify-center gap-3 animate-pulse">
-            <RefreshCw className="h-4 w-4 animate-spin text-cyan-400" />
-            <span>CONNECTING TO LIVE TELEMETRY FEED...</span>
-          </div>
-        ) : error || !data ? (
-          /* Strict Data Integrity: Explicit DATA UNAVAILABLE state */
-          <div className="border border-rose-900/50 bg-rose-950/20 p-6 rounded-lg space-y-3 font-mono text-xs">
-            <div className="flex items-center gap-2 text-rose-400 font-bold">
-              <AlertCircle className="h-4 w-4" />
-              <span>DATA UNAVAILABLE</span>
-            </div>
-            <p className="text-slate-300 leading-relaxed">
-              Live statistics could not be retrieved from the verified upstream data feed ({error || 'Connection Failed'}).
-            </p>
-            <p className="text-slate-500 text-[11px]">
-              In accordance with our strict Data Correctness Rule, old hardcoded numbers and placeholder values are never displayed.
-            </p>
-          </div>
-        ) : (
-          <>
-            {/* Monumental Solved Count */}
-            <div className="space-y-3">
-              <span className="font-mono text-xs uppercase tracking-widest text-slate-400 block">
-                RECORDED PROBLEM ENCOUNTERS (LIVE SOURCE)
+      {!isLoading && error && (
+        <div className="p-6 rounded-xl border border-[#8B4F4F]/40 bg-[#8B4F4F]/10 space-y-1 font-body text-xs text-[#E8E1D5]">
+          <span className="font-mono text-[#8B4F4F] font-semibold block">ARCHIVE TEMPORARILY UNAVAILABLE</span>
+          <p className="text-[#8F98A8] text-[11px]">
+            Live competitive metrics could not be retrieved ({error}).
+          </p>
+        </div>
+      )}
+
+      {!isLoading && data && (
+        <>
+          <section className="space-y-8 border-t border-[#8F98A8]/15 pt-10">
+            <div className="space-y-2">
+              <span className="font-mono text-[11px] text-[#B79A5B] tracking-wider uppercase block">
+                Recorded Problem Encounters
               </span>
 
-              <div className="flex flex-col sm:flex-row sm:items-baseline gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-baseline gap-4 pt-1">
                 <div className="flex items-baseline">
-                  <span className="font-serif text-6xl sm:text-7xl lg:text-8xl font-extrabold tracking-tighter text-slate-100 leading-none">
+                  <span className="font-display text-7xl sm:text-8xl font-light text-[#E8E1D5] leading-none">
                     {data.totalSolved}
                   </span>
-                  <span className="font-serif text-4xl sm:text-5xl text-cyan-400 font-light ml-1">+</span>
+                  <span className="font-display text-4xl text-[#B79A5B] ml-1.5">+</span>
                 </div>
 
-                <div className="font-mono text-xs text-slate-400 space-y-1 max-w-xs border-l border-cyan-500/40 pl-4 py-1">
-                  <span className="text-slate-200 block font-semibold">
-                    MULTI-PLATFORM ARCHIVE
-                  </span>
-                  <p className="text-[11px] text-slate-400 font-light leading-relaxed">
-                    Live telemetry across competitive algorithmic rounds and problem collections.
+                <div className="font-body text-xs text-[#8F98A8] border-l border-[#8F98A8]/20 pl-4 py-1 max-w-sm">
+                  <p className="text-[#E8E1D5] font-medium">Multi-Platform Aggregate</p>
+                  <p className="text-[#8F98A8] pt-0.5 leading-relaxed">
+                    Cumulative problem encounters across LeetCode, GeeksforGeeks, Codeforces, and CodeStudio.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Difficulty Stratification Gauge */}
             {data.leetcode.breakdown.total > 0 && (
-              <div className="space-y-4 pt-2">
-                <div className="flex items-baseline justify-between font-mono text-xs border-b border-slate-800 pb-2">
-                  <span className="text-slate-400 uppercase tracking-wider text-[11px]">
-                    LEETCODE SPECTRUM ({data.leetcode.breakdown.total} SOLVED)
+              <div className="space-y-5 pt-2">
+                <div className="flex items-baseline justify-between text-xs border-b border-[#8F98A8]/15 pb-2">
+                  <span className="font-mono text-[11px] text-[#8F98A8] uppercase tracking-wider">
+                    LeetCode Spectrum ({data.leetcode.breakdown.total} Solved)
                   </span>
-                  <span className="text-amber-300 font-semibold">
-                    {Math.round(((data.leetcode.breakdown.medium + data.leetcode.breakdown.hard) / data.leetcode.breakdown.total) * 100)}% ADVANCED RIGOR
+                  <span className="font-mono text-[11px] text-[#B79A5B]">
+                    {Math.round(((data.leetcode.breakdown.medium + data.leetcode.breakdown.hard) / data.leetcode.breakdown.total) * 100)}% Advanced Rigor
                   </span>
                 </div>
 
-                <div className="space-y-2">
-                  <div className="h-2.5 w-full rounded-full bg-slate-900/90 overflow-hidden flex gap-1 p-0.5 border border-slate-800">
+                <div className="space-y-3">
+                  <div className="h-1.5 w-full rounded-full bg-[#10151D] overflow-hidden flex gap-1 border border-[#8F98A8]/10">
                     <div
                       style={{ width: `${(data.leetcode.breakdown.easy / data.leetcode.breakdown.total) * 100}%` }}
-                      className="bg-emerald-500 h-full rounded-l-full transition-all duration-1000"
+                      className="bg-[#4E8F89] h-full"
                     />
                     <div
                       style={{ width: `${(data.leetcode.breakdown.medium / data.leetcode.breakdown.total) * 100}%` }}
-                      className="bg-amber-400 h-full transition-all duration-1000"
+                      className="bg-[#B79A5B] h-full"
                     />
                     <div
                       style={{ width: `${(data.leetcode.breakdown.hard / data.leetcode.breakdown.total) * 100}%` }}
-                      className="bg-rose-500 h-full rounded-r-full transition-all duration-1000"
+                      className="bg-[#8B4F4F] h-full"
                     />
                   </div>
 
-                  <div className="grid grid-cols-3 font-mono text-xs pt-2">
-                    <div className="space-y-0.5">
-                      <span className="text-[10px] text-emerald-400 block uppercase tracking-wider">
-                        01 {'//'} NOVICE (EASY)
-                      </span>
-                      <span className="font-serif text-xl sm:text-2xl font-bold text-slate-100 block">
+                  <div className="grid grid-cols-3 gap-4 pt-2 font-body text-xs">
+                    <div className="space-y-1">
+                      <span className="font-mono text-[10px] text-[#4E8F89] block">EASY</span>
+                      <span className="font-display text-2xl text-[#E8E1D5] font-medium block">
                         {data.leetcode.breakdown.easy}
                       </span>
-                      <span className="text-[10px] text-slate-500 block">
+                      <span className="font-mono text-[10px] text-[#8F98A8] block">
                         {Math.round((data.leetcode.breakdown.easy / data.leetcode.breakdown.total) * 100)}% of total
                       </span>
                     </div>
 
-                    <div className="space-y-0.5 border-l border-slate-800/80 pl-4">
-                      <span className="text-[10px] text-amber-400 block uppercase tracking-wider">
-                        02 {'//'} ADEPT (MEDIUM)
-                      </span>
-                      <span className="font-serif text-xl sm:text-2xl font-bold text-slate-100 block">
+                    <div className="space-y-1 border-l border-[#8F98A8]/15 pl-4">
+                      <span className="font-mono text-[10px] text-[#B79A5B] block">MEDIUM</span>
+                      <span className="font-display text-2xl text-[#E8E1D5] font-medium block">
                         {data.leetcode.breakdown.medium}
                       </span>
-                      <span className="text-[10px] text-slate-500 block">
+                      <span className="font-mono text-[10px] text-[#8F98A8] block">
                         {Math.round((data.leetcode.breakdown.medium / data.leetcode.breakdown.total) * 100)}% of total
                       </span>
                     </div>
 
-                    <div className="space-y-0.5 border-l border-slate-800/80 pl-4">
-                      <span className="text-[10px] text-rose-400 block uppercase tracking-wider">
-                        03 {'//'} MASTER (HARD)
-                      </span>
-                      <span className="font-serif text-xl sm:text-2xl font-bold text-slate-100 block">
+                    <div className="space-y-1 border-l border-[#8F98A8]/15 pl-4">
+                      <span className="font-mono text-[10px] text-[#8B4F4F] block">HARD</span>
+                      <span className="font-display text-2xl text-[#E8E1D5] font-medium block">
                         {data.leetcode.breakdown.hard}
                       </span>
-                      <span className="text-[10px] text-slate-500 block">
+                      <span className="font-mono text-[10px] text-[#8F98A8] block">
                         {Math.round((data.leetcode.breakdown.hard / data.leetcode.breakdown.total) * 100)}% of total
                       </span>
                     </div>
@@ -212,191 +171,134 @@ export function CodeDossier() {
                 </div>
               </div>
             )}
-          </>
-        )}
-      </section>
+          </section>
 
-      {/* ========================================================================= */}
-      {/* SCENE 03 — COMPUTATIONAL LANDSCAPE & TOPICS                               */}
-      {/* ========================================================================= */}
-      {data && data.topics.length > 0 && (
-        <section className="space-y-8 border-t border-cyan-900/30 pt-12 relative">
-          <div className="flex items-center justify-between font-mono text-[10px] text-cyan-400/80 tracking-widest uppercase">
-            <span>03 {'//'} TOPOLOGY</span>
-            <span>TOPIC ANALYSIS</span>
-          </div>
-
-          <div className="space-y-1.5">
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-100">
-              THE COMPUTATIONAL LANDSCAPE
-            </h2>
-            <p className="text-sm font-light text-slate-300 max-w-lg leading-relaxed">
-              Topic breakdown dynamically aggregated from your live competitive profile.
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            {data.topics.map((topic) => {
-              const isSelected = activeTopic === topic.id;
-
-              return (
-                <div
-                  key={topic.id}
-                  onClick={() => setActiveTopic(topic.id)}
-                  className={`cursor-pointer border-l-2 p-3.5 transition-all duration-300 ${
-                    isSelected
-                      ? 'border-cyan-400 bg-slate-900/50 pl-5'
-                      : 'border-slate-800 hover:border-slate-600 pl-3.5 hover:bg-slate-950/40'
-                  }`}
-                >
-                  <div className="flex items-baseline justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <span
-                        className="h-2 w-2 rounded-full"
-                        style={{ backgroundColor: topic.color }}
-                      />
-                      <h3 className="font-serif text-base sm:text-lg font-bold text-slate-100">
-                        {topic.name}
-                      </h3>
-                    </div>
-                    <div className="font-mono text-xs">
-                      <span className="text-slate-100 font-semibold">{topic.count}</span>
-                      <span className="text-slate-500 text-[10px] ml-1.5">problems</span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* ========================================================================= */}
-      {/* SCENE 04 — LEETCODE CONTEST ARENA                                         */}
-      {/* ========================================================================= */}
-      {data && data.leetcode.rating > 0 && (
-        <section className="space-y-8 border-t border-cyan-900/30 pt-12 relative">
-          <div className="flex items-center justify-between font-mono text-[10px] text-amber-400/80 tracking-widest uppercase">
-            <span>04 {'//'} CONTEST ARENA</span>
-            <span>LEETCODE CHRONICLE</span>
-          </div>
-
-          <div className="space-y-3">
-            <span className="font-mono text-xs uppercase tracking-widest text-amber-400 block">
-              CURRENT CONTEST RATING
-            </span>
-
-            <div className="flex flex-col sm:flex-row sm:items-baseline gap-4">
-              <span className="font-serif text-6xl sm:text-7xl lg:text-8xl font-extrabold tracking-tighter text-amber-300 leading-none">
-                {data.leetcode.rating}
-              </span>
-
-              <div className="font-mono text-xs text-slate-300 space-y-1 border-l-2 border-amber-500/60 pl-4 py-1">
-                <span className="text-emerald-400 font-bold text-sm block">
-                  {data.leetcode.rank}
+          {data.leetcode.rating > 0 && (
+            <section className="space-y-6 border-t border-[#8F98A8]/15 pt-10">
+              <div className="space-y-1">
+                <span className="font-mono text-[11px] text-[#B79A5B] tracking-wider uppercase block">
+                  Contest Arena Record
                 </span>
-                <p className="text-slate-400 font-light text-[11px] leading-relaxed">
-                  Peak Rating: {data.leetcode.maxRating} across {data.leetcode.solvedCount} resolved problems.
-                </p>
+                <h2 className="font-display text-3xl sm:text-4xl font-normal text-[#E8E1D5]">
+                  Rating & Global Standing
+                </h2>
               </div>
-            </div>
-          </div>
-        </section>
-      )}
 
-      {/* ========================================================================= */}
-      {/* SCENE 05 — THE NEXT FRONTIER (CODEFORCES & FUTURE TARGETS ONLY)           */}
-      {/* ========================================================================= */}
-      {data && data.nextFrontier.length > 0 && (
-        <section className="space-y-8 border-t border-cyan-900/30 pt-12 relative">
-          <div className="flex items-center justify-between font-mono text-[10px] text-cyan-400/80 tracking-widest uppercase">
-            <span>05 {'//'} THE NEXT FRONTIER</span>
-            <span>EXPEDITION CARTOGRAPHY</span>
-          </div>
+              <div className="flex flex-col sm:flex-row sm:items-baseline gap-6 pt-2">
+                <span className="font-display text-6xl sm:text-7xl text-[#B79A5B] font-light leading-none">
+                  {data.leetcode.rating}
+                </span>
 
-          <div className="space-y-1.5">
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-100 flex items-center gap-2">
-              <Compass className="h-5 w-5 text-cyan-400" />
-              THE NEXT FRONTIER
-            </h2>
-            <p className="text-sm font-light text-slate-300 max-w-lg leading-relaxed">
-              Future targets, active escalations, and expanding territories along the future → in-progress → achieved lifecycle.
-            </p>
-          </div>
-
-          <div className="space-y-5">
-            {data.nextFrontier.map((target) => (
-              <div
-                key={target.id}
-                className="border-b border-slate-900 pb-5 space-y-2 border-l-2 border-cyan-400 pl-4"
-              >
-                <div className="flex items-baseline justify-between">
-                  <span className="font-mono text-[9px] uppercase tracking-widest text-slate-500">
-                    SECTOR: {target.platformOrDomain}
+                <div className="font-body text-xs text-[#8F98A8] border-l border-[#8F98A8]/20 pl-4 py-1 space-y-1">
+                  <span className="text-[#E8E1D5] font-medium text-sm block">
+                    {data.leetcode.rank}
                   </span>
-                  <span className="font-mono text-[9px] font-semibold uppercase tracking-wider text-cyan-300 animate-pulse">
-                    ● {target.status.replace('-', ' ')}
-                  </span>
+                  <p className="text-[#8F98A8] text-[11px]">
+                    Peak Rating: {data.leetcode.maxRating} across {data.leetcode.solvedCount} resolved problems.
+                  </p>
                 </div>
-
-                <h4 className="font-serif text-base sm:text-lg font-bold text-slate-100">
-                  {target.title}
-                </h4>
-
-                <p className="font-serif text-xs italic text-slate-300 leading-relaxed">
-                  &ldquo;{target.description}&rdquo;
-                </p>
-
-                {target.currentRatingOrProgress && (
-                  <span className="font-mono text-[10px] text-cyan-400 block pt-0.5">
-                    {'//'} Status: {target.currentRatingOrProgress}
-                  </span>
-                )}
               </div>
-            ))}
-          </div>
-        </section>
+            </section>
+          )}
+
+          {data.topics.length > 0 && (
+            <section className="space-y-6 border-t border-[#8F98A8]/15 pt-10">
+              <div className="space-y-1">
+                <span className="font-mono text-[11px] text-[#4E8F89] tracking-wider uppercase block">
+                  Topological Cartography
+                </span>
+                <h2 className="font-display text-3xl sm:text-4xl font-normal text-[#E8E1D5]">
+                  Topics & Domains
+                </h2>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                {data.topics.map((topic) => {
+                  const isSelected = activeTopic === topic.id;
+
+                  return (
+                    <div
+                      key={topic.id}
+                      onClick={() => setActiveTopic(topic.id)}
+                      className={`cursor-pointer rounded-lg border p-3.5 transition-colors ${
+                        isSelected
+                          ? 'border-[#B79A5B]/60 bg-[#10151D]'
+                          : 'border-[#8F98A8]/15 bg-[#10151D]/40 hover:border-[#8F98A8]/30 hover:bg-[#10151D]/70'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-display text-base font-medium text-[#E8E1D5]">
+                          {topic.name}
+                        </span>
+                        <span className="font-mono text-xs text-[#B79A5B]">
+                          {topic.count}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          {data.nextFrontier.length > 0 && (
+            <section className="space-y-6 border-t border-[#8F98A8]/15 pt-10">
+              <div className="space-y-1">
+                <span className="font-mono text-[11px] text-[#B79A5B] tracking-wider uppercase block">
+                  Expeditions
+                </span>
+                <h2 className="font-display text-3xl sm:text-4xl font-normal text-[#E8E1D5]">
+                  The Next Frontier
+                </h2>
+              </div>
+
+              <div className="space-y-4 pt-2">
+                {data.nextFrontier.map((target) => (
+                  <div
+                    key={target.id}
+                    className="p-4 rounded-xl border border-[#8F98A8]/15 bg-[#10151D]/50 space-y-2"
+                  >
+                    <div className="flex items-center justify-between text-[11px] font-mono">
+                      <span className="text-[#8F98A8]">{target.platformOrDomain}</span>
+                      <span className="text-[#4E8F89] capitalize">{target.status.replace('-', ' ')}</span>
+                    </div>
+
+                    <h4 className="font-display text-xl font-medium text-[#E8E1D5]">
+                      {target.title}
+                    </h4>
+
+                    <p className="font-body text-xs text-[#8F98A8] leading-relaxed">
+                      {target.description}
+                    </p>
+
+                    {target.currentRatingOrProgress && (
+                      <span className="font-mono text-[10px] text-[#B79A5B] block pt-1">
+                        Current Status: {target.currentRatingOrProgress}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </>
       )}
 
-      {/* ========================================================================= */}
-      {/* SCENE 06 — CODA & TRAVERSAL                                               */}
-      {/* ========================================================================= */}
-      <section className="space-y-6 border-t border-cyan-900/40 pt-12 relative">
-        <div className="flex items-center justify-between font-mono text-[10px] text-cyan-400/80 tracking-widest uppercase">
-          <span>06 {'//'} CODA</span>
-          <span>THE JOURNEY CONTINUES</span>
-        </div>
+      <section className="space-y-6 border-t border-[#8F98A8]/15 pt-10">
+        <div className="flex flex-wrap items-center gap-4">
+          <button
+            onClick={() => setActiveWorld('build')}
+            className="px-5 py-2 rounded-full border border-[#B79A5B]/40 bg-[#10151D] font-body text-xs text-[#E8E1D5] hover:border-[#B79A5B] hover:text-[#B79A5B] transition-colors"
+          >
+            Traverse to Sector 02: Build &rarr;
+          </button>
 
-        <div className="space-y-4 max-w-xl">
-          <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-slate-100 leading-tight">
-            THE COMPUTATIONAL REALM EXPANDS.
-          </h2>
-
-          <p className="font-serif text-xs sm:text-sm font-light text-slate-300 italic leading-relaxed">
-            &ldquo;Every problem solved is a permanent coordinate mapped into the memory of the universe. The ascent toward deep mathematical mastery continues without end.&rdquo;
-          </p>
-
-          <div className="flex flex-wrap items-center gap-4 pt-2">
-            <button
-              onClick={() => setActiveWorld('build')}
-              className="group flex items-center gap-2 rounded-full border border-orange-500/60 bg-orange-950/30 px-5 py-2 font-mono text-xs text-orange-300 backdrop-blur-md hover:bg-orange-900/40 hover:text-orange-200 transition-all focus:outline-none"
-            >
-              <span>TRAVERSE TO SECTOR 02: BUILD</span>
-              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-            </button>
-
-            <button
-              onClick={resetToUniverse}
-              className="flex items-center gap-2 rounded-full border border-slate-800 bg-slate-950/60 px-4 py-2 font-mono text-xs text-slate-400 hover:text-slate-100 hover:border-slate-700 transition-all focus:outline-none"
-            >
-              <span>RETURN TO ORBIT OVERVIEW [ESC]</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between font-mono text-[10px] text-slate-600 border-t border-slate-900 pt-4">
-          <span>RAGHAV UNIVERSE // SECTOR 01</span>
-          <span>DELHI, IN // 2026</span>
+          <button
+            onClick={resetToUniverse}
+            className="px-4 py-2 rounded-full border border-[#8F98A8]/20 font-body text-xs text-[#8F98A8] hover:text-[#E8E1D5] transition-colors"
+          >
+            Return to Orbit Overview
+          </button>
         </div>
       </section>
     </div>

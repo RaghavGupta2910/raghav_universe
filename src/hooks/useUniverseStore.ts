@@ -2,12 +2,10 @@ import { create } from 'zustand';
 import { WorldId, ViewMode, EntryPhase, WorldTransitionStage } from '@/types/universe';
 
 interface UniverseState {
-  // Entry sequence state (initialized fresh on every page load)
   entryPhase: EntryPhase;
   isEntryComplete: boolean;
-  entryProgress: number; // 0.0 to 1.0
+  entryProgress: number;
 
-  // Exploration & World state
   activeWorld: WorldId | null;
   hoveredWorld: WorldId | null;
   viewMode: ViewMode;
@@ -16,7 +14,6 @@ interface UniverseState {
   isAudioPlaying: boolean;
   activeTab: string;
 
-  // Actions
   setEntryPhase: (phase: EntryPhase) => void;
   setEntryProgress: (progress: number) => void;
   skipEntry: () => void;
@@ -64,7 +61,6 @@ export const useUniverseStore = create<UniverseState>((set, get) => ({
 
   setEntryProgress: (progress) => set({ entryProgress: progress }),
 
-  // Skip affects ONLY the current session/page load in-memory
   skipEntry: () => {
     set({
       entryPhase: 'ready',

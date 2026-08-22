@@ -22,10 +22,6 @@ function cleanEnv(val?: string): string {
   return val.trim().replace(/^["']|["']$/g, '');
 }
 
-/**
- * Retrieves Spotify credentials and computes the appropriate redirect URI
- * based on environment variables and deployment context.
- */
 export function getSpotifyCredentials() {
   const clientId =
     cleanEnv(process.env.SPOTIFY_CLIENT_ID) ||
@@ -38,7 +34,6 @@ export function getSpotifyCredentials() {
     cleanEnv(process.env.SPOTIFY_REDIRECT_URI) ||
     cleanEnv(process.env['SPOTIFY_REDIRECT_URI ']);
 
-  // If not explicitly defined, compute based on Vercel deployment or local dev
   if (!redirectUri) {
     if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
       redirectUri = `https://${cleanEnv(process.env.VERCEL_PROJECT_PRODUCTION_URL)}/api/spotify/callback`;
@@ -54,9 +49,6 @@ export function getSpotifyCredentials() {
   return { clientId, clientSecret, redirectUri };
 }
 
-/**
- * Derives the canonical base URL from the computed redirect URI
- */
 export function getAppBaseUrl(): string {
   const { redirectUri } = getSpotifyCredentials();
   try {
@@ -68,9 +60,6 @@ export function getAppBaseUrl(): string {
   }
 }
 
-/**
- * Builds the official Spotify Authorization URL
- */
 export function buildSpotifyAuthUrl(state: string): string {
   const { clientId, redirectUri } = getSpotifyCredentials();
 
@@ -90,9 +79,6 @@ export function buildSpotifyAuthUrl(state: string): string {
   return `https://accounts.spotify.com/authorize?${params.toString()}`;
 }
 
-/**
- * Exchanges authorization code for Access and Refresh tokens with a strict 6-second timeout
- */
 export async function exchangeSpotifyCode(code: string): Promise<SpotifyTokenResponse> {
   const { clientId, clientSecret, redirectUri } = getSpotifyCredentials();
 
@@ -108,10 +94,6 @@ export async function exchangeSpotifyCode(code: string): Promise<SpotifyTokenRes
     redirect_uri: redirectUri,
   });
 
-  console.log('[SPOTIFY DEBUG] TOKEN EXCHANGE:');
-  console.log('request sent = YES');
-  console.log(`redirect URI used = ${redirectUri}`);
-
   const res = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {
@@ -123,30 +105,16 @@ export async function exchangeSpotifyCode(code: string): Promise<SpotifyTokenRes
     signal: AbortSignal.timeout(6000),
   });
 
-  console.log(`HTTP status = ${res.status}`);
-
   const json = await res.json();
 
   if (!res.ok) {
-    console.log('success = NO');
-    console.log('access token received = NO');
-    console.log('refresh token received = NO');
     console.error('Spotify token exchange failed:', json.error_description || json.error);
     throw new Error(json.error_description || json.error || 'Failed to exchange authorization code');
   }
 
-  console.log('success = YES');
-  console.log('access token received =', Boolean(json.access_token) ? 'YES' : 'NO');
-  console.log('refresh token received =', Boolean(json.refresh_token) ? 'YES' : 'NO');
-  console.log(`expires_in = ${json.expires_in}`);
-  console.log(`scope = ${json.scope}`);
-
   return json;
 }
 
-/**
- * Refreshes an expired access token using a valid refresh token with a strict 6-second timeout
- */
 export async function refreshSpotifyToken(refreshToken: string): Promise<SpotifyTokenResponse> {
   const { clientId, clientSecret } = getSpotifyCredentials();
 
