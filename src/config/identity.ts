@@ -9,7 +9,7 @@ export const IDENTITY_DATA: IdentityWorldData = {
   systemId: 'SOLARIS-RG',
   socials: {
     github: HANDLES_CONFIG.github.profileUrl,
-    linkedin: 'https://linkedin.com/in/raghavgupta',
+    linkedin: 'https://www.linkedin.com/in/raghav-gupta-735365317/',
     codeforces: HANDLES_CONFIG.codeforces.profileUrl,
     leetcode: HANDLES_CONFIG.leetcode.profileUrl,
     email: 'raghavgupta291024@gmail.com',
