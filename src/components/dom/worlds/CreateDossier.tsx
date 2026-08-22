@@ -15,7 +15,7 @@ export function CreateDossier() {
             <span className="h-1.5 w-1.5 rounded-full bg-[#4E8F89]" />
             <span>SECTOR 04 &middot; POLYMATH DIMENSIONS</span>
           </div>
-          <span>35.0 AU</span>
+          <span>38.0 AU</span>
         </div>
 
         <div className="space-y-3 pt-2">
@@ -126,10 +126,10 @@ export function CreateDossier() {
       <section className="space-y-6 border-t border-[#8F98A8]/15 pt-10">
         <div className="flex flex-wrap items-center gap-4">
           <button
-            onClick={() => setActiveWorld('mindset')}
+            onClick={() => setActiveWorld('central')}
             className="px-5 py-2 rounded-full border border-[#B79A5B]/40 bg-[#10151D] font-body text-xs text-[#E8E1D5] hover:border-[#B79A5B] hover:text-[#B79A5B] transition-colors"
           >
-            Traverse to Sector 05: Mindset &rarr;
+            Return to Core: Raghav &rarr;
           </button>
 
           <button

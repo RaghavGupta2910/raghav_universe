@@ -36,7 +36,6 @@ const WORLD_ORDER: (WorldId | null)[] = [
   'build',
   'music',
   'create',
-  'mindset',
 ];
 
 export const useUniverseStore = create<UniverseState>((set, get) => ({

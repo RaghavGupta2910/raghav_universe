@@ -28,7 +28,7 @@ export default function Home() {
       const params = new URLSearchParams(window.location.search);
       const worldParam = params.get('world') as WorldId | null;
 
-      if (worldParam && ['central', 'code', 'build', 'music', 'create', 'mindset'].includes(worldParam)) {
+      if (worldParam && ['central', 'code', 'build', 'music', 'create'].includes(worldParam)) {
         skipEntry();
         setActiveWorld(worldParam);
         window.history.replaceState({}, '', window.location.pathname);

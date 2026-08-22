@@ -1,4 +1,4 @@
-export type WorldId = 'central' | 'code' | 'build' | 'music' | 'create' | 'mindset';
+export type WorldId = 'central' | 'code' | 'build' | 'music' | 'create';
 
 export type ViewMode = 'explore' | 'inspect' | 'orbit';
 

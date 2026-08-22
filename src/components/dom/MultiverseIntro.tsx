@@ -71,7 +71,7 @@ export function MultiverseIntro() {
           <span>
             {entryPhase === 'void' && 'ASTRONOMICAL OBSERVATORY'}
             {entryPhase === 'multiverse' && 'SURVEYING CELESTIAL COORDINATES'}
-            {entryPhase === 'approaching' && 'APPROACHING RAGHAV UNIVERSE'}
+            {entryPhase === 'approaching' && 'APPROACHING CELESTIAL DOMAIN'}
             {entryPhase === 'arrival' && 'ENTERING CELESTIAL SPHERE'}
           </span>
         </div>
@@ -79,19 +79,6 @@ export function MultiverseIntro() {
         <span className="hidden sm:inline text-[10px] text-[#8F98A8]/60">
           28.61° N, 77.20° E
         </span>
-      </div>
-
-      <div className="flex flex-col items-center justify-center text-center space-y-2">
-        {entryPhase === 'approaching' && (
-          <div className="space-y-1 animate-in fade-in duration-700">
-            <h2 className="font-display text-3xl sm:text-4xl font-normal tracking-wide text-[#E8E1D5]">
-              Raghav Gupta
-            </h2>
-            <p className="font-body text-xs text-[#B79A5B] tracking-wider">
-              Mathematics & Computing
-            </p>
-          </div>
-        )}
       </div>
 
       <div className="flex items-end justify-between font-body text-xs">

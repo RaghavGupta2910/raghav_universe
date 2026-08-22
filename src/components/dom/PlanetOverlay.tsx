@@ -7,7 +7,6 @@ import { CodeDossier } from './worlds/CodeDossier';
 import { BuildDossier } from './worlds/BuildDossier';
 import { MusicDossier } from './worlds/MusicDossier';
 import { CreateDossier } from './worlds/CreateDossier';
-import { MindsetDossier } from './worlds/MindsetDossier';
 
 export function PlanetOverlay() {
   const activeWorld = useUniverseStore((s) => s.activeWorld);
@@ -60,7 +59,6 @@ export function PlanetOverlay() {
           {currentPlanet.id === 'build' && <BuildDossier />}
           {currentPlanet.id === 'music' && <MusicDossier />}
           {currentPlanet.id === 'create' && <CreateDossier />}
-          {currentPlanet.id === 'mindset' && <MindsetDossier />}
         </div>
       </aside>
     </div>
