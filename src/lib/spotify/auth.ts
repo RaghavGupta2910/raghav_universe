@@ -22,6 +22,10 @@ function cleanEnv(val?: string): string {
   return val.trim().replace(/^["']|["']$/g, '');
 }
 
+/**
+ * Retrieves Spotify credentials and computes the appropriate redirect URI
+ * based on environment variables and deployment context.
+ */
 export function getSpotifyCredentials() {
   const clientId =
     cleanEnv(process.env.SPOTIFY_CLIENT_ID) ||
@@ -29,11 +33,39 @@ export function getSpotifyCredentials() {
   const clientSecret =
     cleanEnv(process.env.SPOTIFY_CLIENT_SECRET) ||
     cleanEnv(process.env['SPOTIFY_CLIENT_SECRET ']);
-  const redirectUri =
+
+  let redirectUri =
     cleanEnv(process.env.SPOTIFY_REDIRECT_URI) ||
-    'http://127.0.0.1:3000/api/spotify/callback';
+    cleanEnv(process.env['SPOTIFY_REDIRECT_URI ']);
+
+  // If not explicitly defined, compute based on Vercel deployment or local dev
+  if (!redirectUri) {
+    if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+      redirectUri = `https://${cleanEnv(process.env.VERCEL_PROJECT_PRODUCTION_URL)}/api/spotify/callback`;
+    } else if (process.env.VERCEL_URL) {
+      redirectUri = `https://${cleanEnv(process.env.VERCEL_URL)}/api/spotify/callback`;
+    } else if (process.env.NODE_ENV === 'production') {
+      redirectUri = 'https://raghav-universe.vercel.app/api/spotify/callback';
+    } else {
+      redirectUri = 'http://127.0.0.1:3000/api/spotify/callback';
+    }
+  }
 
   return { clientId, clientSecret, redirectUri };
+}
+
+/**
+ * Derives the canonical base URL from the computed redirect URI
+ */
+export function getAppBaseUrl(): string {
+  const { redirectUri } = getSpotifyCredentials();
+  try {
+    return new URL(redirectUri).origin;
+  } catch {
+    return process.env.NODE_ENV === 'production'
+      ? 'https://raghav-universe.vercel.app'
+      : 'http://127.0.0.1:3000';
+  }
 }
 
 /**
@@ -78,6 +110,7 @@ export async function exchangeSpotifyCode(code: string): Promise<SpotifyTokenRes
 
   console.log('[SPOTIFY DEBUG] TOKEN EXCHANGE:');
   console.log('request sent = YES');
+  console.log(`redirect URI used = ${redirectUri}`);
 
   const res = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',

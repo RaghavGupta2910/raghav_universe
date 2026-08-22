@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { buildSpotifyAuthUrl, getSpotifyCredentials } from '@/lib/spotify/auth';
+import { buildSpotifyAuthUrl, getSpotifyCredentials, getAppBaseUrl } from '@/lib/spotify/auth';
 import { createAndStoreOAuthState } from '@/lib/spotify/stateStore';
 
 export const dynamic = 'force-dynamic';
@@ -12,7 +12,7 @@ export async function GET() {
       return NextResponse.json(
         {
           error: 'Spotify Client ID not configured',
-          message: 'Please set SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET in .env.local',
+          message: 'Please set SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET in environment variables',
         },
         { status: 500 }
       );
@@ -29,11 +29,13 @@ export async function GET() {
     console.log('state persisted = YES');
 
     const response = NextResponse.redirect(authUrl);
+    const baseUrl = getAppBaseUrl();
+    const isHttps = baseUrl.startsWith('https') || process.env.NODE_ENV === 'production';
 
     // Store state in HTTP-only cookie as additional layer
     response.cookies.set('spotify_auth_state', state, {
       httpOnly: true,
-      secure: false,
+      secure: isHttps,
       sameSite: 'lax',
       maxAge: 600, // 10 minutes
       path: '/',
