@@ -18,7 +18,7 @@ export function UniverseCanvas() {
   const { dpr } = useDeviceCapability();
 
   return (
-    <div className="fixed inset-0 z-0 bg-[#080B12] overflow-hidden select-none pointer-events-auto">
+    <div className="fixed inset-0 z-0 bg-[#080B12] overflow-hidden select-none pointer-events-auto touch-none">
       <Canvas
         camera={{
           position: MULTIVERSE_START_CAMERA.position,

@@ -44,7 +44,6 @@ const GalaxyClusterShader = {
 };
 
 export function MultiverseField() {
-  const isEntryComplete = useUniverseStore((s) => s.isEntryComplete);
   const groupRef = useRef<THREE.Group>(null);
   const shaderMatRef = useRef<THREE.ShaderMaterial>(null);
 
@@ -107,7 +106,7 @@ export function MultiverseField() {
     return [pos, cols, szs, als];
   }, []);
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock, camera }) => {
     const time = clock.getElapsedTime();
 
     if (groupRef.current) {
@@ -117,7 +116,17 @@ export function MultiverseField() {
     if (shaderMatRef.current?.uniforms?.uTime) {
       shaderMatRef.current.uniforms.uTime.value = time;
       const entryProgress = useUniverseStore.getState().entryProgress;
-      const fade = isEntryComplete ? 0.25 : Math.max(0.2, 1.0 - entryProgress * 0.7);
+      const isEntryComplete = useUniverseStore.getState().isEntryComplete;
+
+      let fade = 1.0;
+      if (!isEntryComplete) {
+        fade = Math.max(0.2, 1.0 - entryProgress * 0.7);
+      } else {
+        const camDistance = camera.position.length();
+        const zoomOutRatio = THREE.MathUtils.clamp((camDistance - 44) / (550 - 44), 0, 1);
+        fade = THREE.MathUtils.lerp(0.25, 1.0, zoomOutRatio);
+      }
+
       if (shaderMatRef.current.uniforms.uGlobalFade) {
         shaderMatRef.current.uniforms.uGlobalFade.value = fade;
       }

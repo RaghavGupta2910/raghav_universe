@@ -98,7 +98,7 @@ export function PlanetMesh({ planet }: PlanetMeshProps) {
     const time = clock.getElapsedTime();
 
     if (isOrbitingEnabled && !isSelected) {
-      currentAngleRef.current += delta * (planet.orbitalSpeed * 0.08);
+      currentAngleRef.current += delta * (planet.orbitalSpeed * 0.095);
     }
 
     const [x, y, z] = calculateOrbitalPosition(
